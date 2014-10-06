@@ -1,0 +1,28 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    Layout = "Master.cshtml";
+    int cacheTime = 10;
+    
+    Umbraco.Web.Models.PartialViewMacroModel mdl = new global::Umbraco.Web.Models.PartialViewMacroModel(Model.Content, 0, "", "", null);
+
+    string title = Umbraco.Field("title", altFieldAlias: "pageName").ToString();
+
+}
+    <div class="clearfix">
+
+    @Html.CachedPartial("IntroHelper", Model, cacheTime, cacheByPage: true,
+                         viewData: new ViewDataDictionary { { "showTitle", 0 }, { "headingTag", "h1" } })
+
+
+</div>
+
+    <section class="homepromos clearfix">
+    @Html.CachedPartial("HomePromos", Model, 10, cacheByPage: true)
+</section>
+
+
+    <div class="elements clearfix">
+    @Html.Partial("Elements", mdl)
+</div>
+
+

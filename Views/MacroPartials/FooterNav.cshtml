@@ -1,0 +1,88 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using FlowJo
+@{
+    @* Get the root of the website *@
+    var root = CurrentPage.AncestorOrSelf(1);
+
+    string twitterLink = "";
+    string facebookLink = "";
+    string linkedInLink = "";
+    string youtubeLink = "";
+
+    if (root != null)
+    {
+        twitterLink = root.TwitterLink == null ? "" : root.TwitterLink;
+        facebookLink = root.FacebookLink == null ? "" : root.FacebookLink;
+        linkedInLink = root.LinkedInLink == null ? "" : root.LinkedInLink;
+        youtubeLink = root.YoutubeChannelLink == null ? "" : root.YoutubeChannelLink;
+    }
+}
+<div class="footer row">
+
+    <div class="@Grid.Cols(Grid.Xs, 6)">
+        
+        <!-- Static navbar -->
+        <div class="footerNav" role="navigation">
+            <nav class="">
+                <ul>
+                    <li><a href="#">FlowJo Framework &copy; ISNT Limited @DateTime.Today.Year</a></li>
+                </ul>
+
+
+
+            </nav>
+        </div>
+    </div>
+
+    <div class="@Grid.Cols(Grid.Xs, 6)">
+        <div class="footerNav right" role="navigation">
+            <nav>
+                <ul>
+                    @foreach (var id in root.FooterMenuPageLinks.Split(','))
+                    {
+
+                        @*For each link, get the node, and display its name and url*@
+                        var content = Umbraco.Content(id);
+
+                        <li><a href="@content.Url">@content.Name</a></li>
+                    }
+                </ul>
+            </nav>
+            </div>
+
+            @*
+            <div class="socialNav">
+
+                @if (!string.IsNullOrEmpty(twitterLink) || !string.IsNullOrEmpty(facebookLink) || !string.IsNullOrEmpty(linkedInLink) || !string.IsNullOrEmpty(youtubeLink))
+                {
+                    <ul class="nav social">
+                        @if (!string.IsNullOrEmpty(twitterLink))
+                        {
+                            <li><a href="http://twitter.com/@twitterLink" title="twitter @twitterLink" target="_blank"><img src="/images/social/twitter/32.png" alt="twitter @twitterLink" class="img-responsive" /></a></li>
+                        }
+                        @if (!string.IsNullOrEmpty(facebookLink))
+                        {
+                            <li><a href="http://facebook.com/@facebookLink" title="facebook @facebookLink" target="_blank"><img src="/images/social/facebook/32.png" alt="facebook @facebookLink" class="img-responsive" /></a></li>
+                        }
+                        @if (!string.IsNullOrEmpty(linkedInLink))
+                        {
+                            <li><a href="https://www.linkedin.com/profile/view?id=@linkedInLink" title="linkedIn @linkedInLink" target="_blank"><img src="/images/social/linkedin/32.png" alt="linkedIn @linkedInLink" class="img-responsive" /></a></li>
+                        }
+                        @if (!string.IsNullOrEmpty(youtubeLink))
+                        {
+                            <li><a href="http://youtube.com/user/@youtubeLink" title="youtube @youtubeLink" target="_blank"><img src="/images/social/youtube/32.png" alt="youtube @youtubeLink" class="img-responsive" /></a></li>
+                        }
+                    </ul>
+                }
+
+                    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=cd5465"></script>
+                    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                    <div class="addthis_native_toolbox"></div>
+
+                </div>
+            *@
+
+        </div>
+
+    </div>

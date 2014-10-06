@@ -1,0 +1,108 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using System.Text;
+@using FlowJo
+@{
+    Layout = null;
+
+    var promos = CurrentPage.GetPropertyValue("rightColumnPromos", false);
+
+    if (String.IsNullOrEmpty(promos)) { return;  }
+
+    int i = 0;
+
+    StringBuilder sbList = new StringBuilder();
+    StringBuilder sbPanels = new StringBuilder();
+
+
+    foreach (var id in promos.Split(','))
+    {
+        var promo = Umbraco.Content(id);
+
+        var title = promo.Title;
+        var intro = promo.IntroParagraph;
+        var text = promo.BodyText;
+        var imageUrl = "";
+        string imageId = promo.Image == null ? "" : promo.Image.ToString();
+        if (!string.IsNullOrEmpty(imageId))
+        {
+            imageUrl = Umbraco.Media(imageId).GetCropUrl("image", "thumbnail");
+        }
+
+        i++;
+
+        sbList.Append("<li><a href=\"#panel" + i + "\" id=\"panel" + i + "\" class=\"panel-control panel" + i + "\">> " + promo.Name + "</a></li>");
+
+
+        sbPanels.Append("<div class=\"panel panel" + i + "\">");
+        sbPanels.Append("<h3>" + title + "</h3>");
+
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                sbPanels.Append("<img src=\"" + imageUrl + "\" alt=\"" + title + "\" class=\"img-responsive\" />");
+            }
+
+        sbPanels.Append("<p class=\"intro\">" + intro + "</p>");
+            sbPanels.Append("" + text);
+
+
+        if (promo.Links.GetType() != typeof(Umbraco.Core.Dynamics.DynamicNull))
+        {
+            Newtonsoft.Json.Linq.JArray links = promo.Links;
+            if (links.Any())
+            {
+                sbPanels.Append("<ul class=\"promoLinks\">");
+
+                    foreach (dynamic link in links)
+                    {
+                        var url = link.link;
+                        if (link.isInternal == true)
+                        {
+                            var thisId = link.@internal.ToString();
+                            url = Umbraco.NiceUrl(int.Parse(thisId));
+                        }
+
+                        sbPanels.Append("<li><a href=\"" + url + "\" class=\"" + (link.isInternal == true ? "internal" : "") + "\"" + (link.newWindow == true ? "target=_blank" : "") + ">" + link.caption + "</a></li>");
+                    }
+                sbPanels.Append("</ul>");
+            }
+        }
+
+        sbPanels.Append("</div>");
+
+    }
+
+}
+
+<section class="section">
+
+    <div class="@Grid.Row">
+        <div class="@Grid.Cols(Grid.Md, 5)">
+
+
+            <div class="">
+                <ul class="panelcontrols">
+                    @Html.Raw(sbList.ToString())
+                </ul>
+
+            </div>
+
+        </div>
+        <div class="@Grid.Cols(Grid.Md, 7)">
+
+            <div class="the-panels">
+
+                <div class="panel panel0">
+                    <h3>Size is important</h3>
+                    <img src="/images/responsive.png" alt="desk" width="360" />
+                </div>
+
+                @Html.Raw(sbPanels.ToString())
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+</section>

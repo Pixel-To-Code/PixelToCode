@@ -1,0 +1,135 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    Layout = null;
+
+    //Random r = new Random(DateTime.Now.Millisecond);
+    
+    var promos = CurrentPage.Children();
+    int i = 0;
+}
+
+
+
+
+
+<div class="carousel carousel-outer" data-carousel-mode="fade">
+    <!-- Carousel Indicators-->
+    <ol>
+        @{
+            i = 0;
+            foreach (var promo in promos)
+            {
+                <li class="@(i==0 ? "active" : "")"></li>
+                i++;
+            }
+        }
+    </ol>
+    <!-- Carousel Items-->
+    @{
+        i = 0;
+        foreach (var promo in promos)
+        {
+            var title = promo.Title;
+            var intro = promo.IntroParagraph;
+            var text = promo.BodyText;
+            var image = Umbraco.Media(promo.Image).GetCropUrl("image", "full size");
+
+            <figure class="@(i == 0 ? "carousel-active" : "")">
+                <img alt="@title" src="@image" />
+                <figcaption>
+                    <h4>@title</h4>
+                    <p class="introduction">@intro</p>
+                </figcaption>
+            </figure>
+
+            i++;
+        }
+    }
+
+    <!-- Carousel Controls-->
+    <button class="back carousel-control"><</button>
+    <button class="forward carousel-control">></button>
+</div>
+
+
+@*
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            @{
+                i = 0;
+                foreach (var promo in promos)
+                {
+                    <li data-target="#myCarousel" data-slide-to="@i" class="@(i==0 ? "active" : "")"></li>
+                    i++;
+                }
+            }
+        </ol>
+        <div class="carousel-inner">
+
+            @{
+                    i = 0;
+                    foreach (var promo in promos)
+                    {
+                        var title = promo.Title;
+                        var intro = promo.IntroParagraph;
+                        var text = promo.BodyText;
+                        var image = Umbraco.Media(promo.Image).GetCropUrl("image", "full size");
+
+                        <div class="item @(i == 0 ? "active" : "")">
+                            <img alt="@title" src="@image">
+                            <div class="container">
+                                <div class="carousel-caption">
+                                    <h2>@title</h2>
+                                    <p class="introduction">@intro</p>
+                                </div>
+                            </div>
+                        </div>
+                        i++;
+                    }
+            }
+
+
+
+                            </div>
+                            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                        </div>
+
+        @*<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                @{
+                    i = 0;
+                    foreach (var promo in promos)
+                    {
+                        <li data-target="#carousel-example-generic" data-slide-to="@i" class="@(i==0 ? "active" : "")">hey</li>
+                        i++;
+                    }
+                }
+            </ol>
+            <div class="carousel-inner">
+                @{
+                    i = 0;
+                    foreach (var promo in promos)
+                    {
+                        var title = promo.Title;
+                        var intro = promo.IntroParagraph;
+                        var text = promo.BodyText;
+                        var image = Umbraco.Media(promo.Image).GetCropUrl("image", "full size");
+
+                        <div class="item @(i == 0 ? "active" : "")">
+                            @ *<img data-src="holder.js/800x200/auto/#000:#fff/text:Second slide" alt="@title" src="@image">* @
+                            <img src="@("http://placehold.it/1280x400/cc2" + r.Next(999))" alt="@title" src="@image">
+                        </div>
+
+                    }
+                }
+            </div>
+            <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+        </div>*@
+

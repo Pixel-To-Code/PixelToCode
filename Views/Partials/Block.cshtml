@@ -1,0 +1,19 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    string clas = "";
+                
+    if (Model.Content.HasProperty("style"))
+    {
+        clas = Model.Content.GetPropertyValue("style").ToString();
+    }
+    Umbraco.Web.Models.PartialViewMacroModel mdl = new global::Umbraco.Web.Models.PartialViewMacroModel(Model.Content, 0, "", "", null);
+
+}
+<div class="@clas blockInner">
+
+    @Html.Partial("IntroHelper", Model,
+        viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h3" } })
+
+    @Html.Partial("Elements", mdl)
+
+</div>

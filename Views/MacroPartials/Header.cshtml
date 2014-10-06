@@ -1,0 +1,16 @@
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    IPublishedContent root = CurrentPage.AncestorOrSelf(1);
+
+    var siteName = root.GetPropertyValue("siteName");
+    var title = CurrentPage.GetPropertyValue("title");
+    var introParagraph = CurrentPage.GetPropertyValue("introParagraph");
+    if (string.IsNullOrEmpty(introParagraph))
+    {
+        introParagraph = (root.GetPropertyValue("introParagraph") + " " + title).Trim();
+    }    
+}
+<meta name="keywords" content="@siteName @title" />
+<meta name="description" content="@introParagraph" />
+<meta name="author" content="Pixel-to-Code by ISNT Limited @DateTime.Today.Year" />
+<title>@siteName | @title</title>

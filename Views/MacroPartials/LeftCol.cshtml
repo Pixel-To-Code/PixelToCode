@@ -1,0 +1,5 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    IPublishedContent root = CurrentPage.AncestorOrSelf(1);
+}
+@Html.Raw(CurrentPage.GetPropertyValue("leftColumnContent", true))

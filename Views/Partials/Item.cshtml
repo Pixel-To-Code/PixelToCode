@@ -1,0 +1,6 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+
+@Html.Partial("IntroHelper", Model,
+                        viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h3" } })
+
+<a href="@Model.Content.Url">Read more</a>

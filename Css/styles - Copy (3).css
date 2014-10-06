@@ -1,0 +1,501 @@
+﻿
+@font-face {
+    font-family: 'ralewayregular';
+    src: url('/fonts/raleway-regular-webfont.eot');
+    src: url('/fonts/raleway-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/raleway-regular-webfont.woff') format('woff'),
+         url('/fonts/raleway-regular-webfont.ttf') format('truetype'),
+         url('/fonts/raleway-regular-webfont.svg#ralewayregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ralewaybold';
+    src: url('/fonts/raleway-bold-webfont.eot');
+    src: url('/fonts/raleway-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/raleway-bold-webfont.woff') format('woff'),
+         url('/fonts/raleway-bold-webfont.ttf') format('truetype'),
+         url('/fonts/raleway-bold-webfont.svg#ralewaybold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ralewaylight';
+    src: url('/fonts/raleway-light-webfont.eot');
+    src: url('/fonts/raleway-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/raleway-light-webfont.woff') format('woff'),
+         url('/fonts/raleway-light-webfont.ttf') format('truetype'),
+         url('/fonts/raleway-light-webfont.svg#ralewaylight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+html {
+    background-color: #a9dbd9;
+
+    background-image: -webkit-gradient( linear, left top, left bottom, color-stop(0, #000), color-stop(1, #baecea) );
+    background-image: -o-linear-gradient(bottom, #000 0%, #baecea 100%);
+    background-image: -moz-linear-gradient(bottom, #000 0%, #baecea 100%);
+    background-image: -webkit-linear-gradient(bottom, #000 0%, #baecea 100%);
+    background-image: -ms-linear-gradient(bottom, #000 0%, #baecea 100%);
+    background-image: linear-gradient(to bottom, #000 0%, #baecea 100%);
+
+}
+
+body {
+    font-family: 'ralewayregular';
+}
+
+
+.toggle .icon-bar {
+    background-color: #FFF;
+}
+.toggle .icon-bar + .icon-bar {
+    margin-top: 4px;
+}
+.toggle .icon-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    border-radius: 1px;
+}
+
+.toggle {
+    float: right;
+    margin-right: 15px;
+    padding: 9px 10px;
+    margin-top: 13px;
+    margin-bottom: 13px;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+nav ul  {
+    list-style: none outside none
+}
+
+nav ul li  {
+    float: left;
+}
+
+nav ul li a {
+font-family: 'ralewaybold';
+padding: 5px;
+}
+
+#leftColNav  nav ul li  {
+    float: none;
+}
+
+#leftColNav  nav ul li a {
+    padding: 5px 0px;
+}
+
+section { 
+    margin-top: 1em;
+    /*border-top: 2px solid #52585b;*/ 
+    }
+
+#content .section:first-child {
+    margin-top: 0;
+    border-top: 0;
+}
+
+.fullwidth {
+    width: 100%;
+}
+
+ul.nav li a,
+h1, h2, h3, h4, h5, h6 { font-family: 'ralewaybold'; }
+
+h1 { padding: 10px 0 ;
+     margin: 0 0;
+
+}
+
+.pageTitle {
+    clear: both;
+}
+
+h1.pageTitle {
+    background-color: #385052;
+    border-radius: 0 5px 5px 0;
+    color: white;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.socialNav ul.social {
+    margin-top: -5px;
+}
+
+.socialNav ul.social li {
+    float: right;
+    margin: 0 0 5px 10px;
+    display: table;
+    table-layout: fixed;
+}
+
+.footer ul.nav.social {
+    float:none;
+    margin: 0 auto;
+    display: table;
+    table-layout: fixed;
+
+}
+
+.elements {
+    display: block;
+    margin-bottom: 1em;
+}
+
+p.intro {
+    font-size: 1.4em;
+}
+
+.green { 
+    background-color: #ccc;     
+    padding: 5px;
+ }
+
+.pagination li { list-style: none; float: left; margin: 0px 3px; }
+
+    .pagination li h4 {
+        margin-top: 0px;
+    }
+
+.promoLinks {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+ul.promoLinks li { list-style: none; }
+ul.promoLinks  a  { text-decoration: none; }
+
+
+nav > ul > li a
+{
+
+font-size: 17px;
+font-family: ralewayregular;
+
+}
+
+/*
+.footer {
+    position: absolute;
+    bottom: 0px;
+    width: 90%;
+    height: 60px;
+    background-color: #F5F5F5;
+}
+
+.container .text-muted {
+    margin: 20px 0px;
+}
+    */
+
+ul.level-2 {
+    padding-left: 4px;
+}
+
+ul.level-3 {
+    padding-left: 8px;
+}
+
+.logo 
+{
+float: left;
+}
+
+.topnav .logo img
+{
+
+    max-width: 100%;
+    height: auto;
+}
+
+.topnav
+{
+margin-top: 18px;
+margin-bottom: 60px;
+}
+
+
+
+
+
+
+
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  height: 400px;
+  margin-bottom: 60px;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+    z-index: 10;
+    left: 20%;
+    top: 30%;
+    margin-bottom: 30px;
+    text-align: left;
+}
+.carousel-caption h2, .carousel-caption p {
+    width: inherit;
+    padding: 5px;
+    background-color: rgba(241, 241, 241, 0.5);
+}
+
+33/* Declare heights because of positioning of img element */
+.carousel .item {
+  height: 400px;
+  background-color: #777;
+}
+.carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 400px;
+}
+
+#header-full {
+    background-color: #a9dbd9;
+
+    background-image: -webkit-gradient( linear, left top, left bottom, color-stop(0, #a9dbd9), color-stop(1, #baecea) );
+    background-image: -o-linear-gradient(bottom, #a9dbd9 0%, #baecea 100%);
+    background-image: -moz-linear-gradient(bottom, #a9dbd9 0%, #baecea 100%);
+    background-image: -webkit-linear-gradient(bottom, #a9dbd9 0%, #baecea 100%);
+    background-image: -ms-linear-gradient(bottom, #a9dbd9 0%, #baecea 100%);
+    background-image: linear-gradient(to bottom, #a9dbd9 0%, #baecea 100%);
+
+    padding: 40px 0;
+}
+
+
+
+#breadcrumb-full-inner {
+
+    background-color: #feb41c;
+    margin: 4px auto;
+}
+
+#breadcrumb-full {
+    background-image: url(/images/border.png);
+ 
+    /*background-image: -webkit-gradient( linear, left top, left bottom, color-stop(0, #feb41c), color-stop(1, #0fc52d) );
+    background-image: -o-linear-gradient(bottom, #feb41c 0%, #0fc52d 100%);
+    background-image: -moz-linear-gradient(bottom, #feb41c 0%, #0fc52d 100%);
+    background-image: -webkit-linear-gradient(bottom, #feb41c 0%, #0fc52d 100%);
+    background-image: -ms-linear-gradient(bottom, #feb41c 0%, #0fc52d 100%);
+    background-image: linear-gradient(to bottom, #feb41c 0%, #0fc52d 100%);*/
+    
+   /*
+       border-top: 4px solid #348899; 
+    border-bottom: 3px solid #348899;
+    margin-bottom: 0px;
+       */
+   padding: 0;
+
+
+}
+
+#content-full {
+
+            margin: 0 auto;
+
+                background-color: #cbfdfb;
+
+
+    /*
+        background-image: -webkit-gradient( linear, left top, left bottom, color-stop(0, #2babe1), color-stop(1, #3cbcf2) );
+    background-image: -o-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: -moz-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: -webkit-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: -ms-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: linear-gradient(to bottom, #2babe1 0%, #3cbcf2 100%);
+        */
+}
+
+
+#content {
+    background-color: #e5fffe;
+    padding-bottom: 40px;
+}
+
+
+#footer-full {
+    background-color: #feb41c;
+       background-image: url(/images/border.png);
+ 
+    /*background-image: -webkit-gradient( linear, left top, left bottom, color-stop(0, #feb41c), color-stop(1, #0fc52d) );
+    background-image: -o-linear-gradient(bottom, #feb41c 0%, #0fc52d 100%);
+    background-image: -moz-linear-gradient(bottom, #feb41c 0%, #0fc52d 100%);
+    background-image: -webkit-linear-gradient(bottom, #feb41c 0%, #0fc52d 100%);
+    background-image: -ms-linear-gradient(bottom, #feb41c 0%, #0fc52d 100%);
+    background-image: linear-gradient(to bottom, #feb41c 0%, #0fc52d 100%);*/
+
+        /*border-top: 3px solid #348899;*/ 
+
+}
+
+#footer-full-inner {
+
+    background-color: #363F45;
+    margin: 5px auto 0;
+    padding-top: 1px;
+}
+
+
+.homepromos {
+    color: #003133;
+    border: none;
+    background-color: #A9DBD9;
+    border-radius: 0 5px;
+    box-shadow: 10px 10px 10px #888;
+}
+
+.homepromos ul  { list-style: none outside none;}
+
+.homepromos ul li a { 
+    text-decoration: none; 
+    background-color: #385052;
+    border-radius: 0 5px 5px 0;
+    color: white;
+    width: 100%;
+    padding: 7px;
+}
+
+    .homepromos ul.panelcontrols {
+    line-height: 3em;
+    /*padding: 30px 10px;
+    background-color: #a9dbd9;
+    border-radius: 20px 105px 30px 150px;
+    border: 5px solid #FEB41C;
+    min-height: 300px;
+    text-align: center;
+    margin-left: 20px;*/
+    }
+    
+    .homepromos ul.panelcontrols li {
+    font-size: 20px;   
+}
+
+    .homepromos .spacer {
+        margin-top: 20px;
+    }
+
+    .homepromos .the-panels {
+        max-width: 608px;
+        height: 278px;
+        overflow: hidden;
+        padding-left: 20px;
+    }
+
+    .homepromos div.panel {
+                display: none;
+                height: 100%;
+    }
+
+    .homepromos div.panel p { width: 75%;}
+
+        .homepromos div.panel img { float: right;}
+
+    .homepromos div.panel0 {
+        display: block;
+    }
+
+.blockInner
+{
+display: table;
+width: 100%;
+border-radius: 5px 20px 15px 40px;
+background-color: #FEB41C;
+padding: 15px 35px;
+margin-top: 30px;
+border: 5px solid #363F45;
+    }
+
+.blockInner p
+{
+color: white;
+font-size: 1.1em;
+background-color: rgba(153, 153, 153, 0.5);
+padding: 8px 15px;
+border-radius: 5px;
+    }
+
+.blockInner .pageTitle
+{
+    line-height: 48px;
+    border-bottom: 1px solid #363F45;
+    color: #363F45;
+}
+
+.i1065 .block:first-child .blockInner {
+    background-color: #86afbc;
+} 
+.i1065 .block:last-child .blockInner {
+    background-color: #91bcbc;
+}
+
+
+.carousel .carousel-active > figcaption {
+    position: absolute;
+    background-color: rgba(0,0,0,0.3);
+}
+
+/*h1 {
+  margin: 0.67em 0;
+   font-size: 91px;
+  font-weight: 500;
+}
+h2 {
+  color: #52585b;
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 400;
+}
+h3 {
+  color: #52585b;
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.25em;
+  margin: 0.5em 0;
+}*/
+
+
+h4.strapline {
+    font-family: "ralewayregular";
+    font-size: 24px;
+}
+
+ul
+{
+    padding-left: 0;
+}
+
+ul.nav.social li img, .breadcrumb li {
+    margin: 24px 0;
+}
+
+.footerNav {
+    margin: 40px 0;
+}
+
+.footerNav a {
+    color: white;
+}
+
+    .footerNav.right {
+        float: right;
+    }

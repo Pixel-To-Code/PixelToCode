@@ -1,0 +1,277 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using System.Text.RegularExpressions
+@using FlowJo
+@{
+    Layout = null;
+    Random r = new Random(DateTime.Now.Millisecond);
+
+    IPublishedContent root = CurrentPage.AncestorOrSelf(1);
+    string contactEmail = (string)root.GetPropertyValue("contactEmail");
+
+    int num1 = r.Next(1, 9), num2 = r.Next(1, 9);
+    string title = Umbraco.Field("title", altFieldAlias: "pageName").ToString();
+
+    string doctype = CurrentPage.DocumentType == null ? "block" : CurrentPage.DocumentType.ToString();
+    string thankYou = CurrentPage.ThankYouMessage == null ? "Thanks for sending the information below:" : CurrentPage.ThankYouMessage.ToString();
+
+    var folderId = CurrentPage.StorageFolder;
+
+    var contentService = ApplicationContext.Current.Services.ContentService;
+
+    var contentTypeService = ApplicationContext.Current.Services.ContentTypeService;
+
+    IContentType dt = contentTypeService.GetContentType(doctype);
+    
+    if (dt != null)
+    {
+   
+        // __RequestVerificationToken  
+
+        bool bValid = ViewData.ModelState.IsValid;
+    
+        // display and save posted values
+        if (!IsPost)
+        {
+        }
+        else
+        {
+            num1 = int.Parse(Request.Form["num1"]);
+            num2 = int.Parse(Request.Form["num2"]);
+        
+            try { 
+                AntiForgery.Validate(Request.Cookies["__RequestVerificationToken"].Value, Request.Form["__RequestVerificationToken"].ToString());
+            }
+            catch
+            {
+                bValid = false;
+            }
+
+
+            if (Request["sum"] == null || int.Parse(Request["sum"].ToString()) != (num1 + num2))
+            { bValid = false; 
+            <p>Sum : invalid answer</p>}
+        
+            // sever-side validation
+            foreach (PropertyType pt in dt.CompositionPropertyTypes)
+            {
+                if (pt.Mandatory && string.IsNullOrEmpty(Request.Form[pt.Alias]))
+                {
+                    <p>@pt.Name : a value is required</p>
+                    bValid = false;
+                }
+                if (!string.IsNullOrEmpty(pt.ValidationRegExp))
+                {
+                    Regex regex = new Regex(pt.ValidationRegExp, RegexOptions.IgnoreCase);
+
+                    if (!regex.IsMatch(Request.Form[pt.Alias].ToString()))
+                    {
+                        <p>@pt.Name : a correct value is required</p>
+                        bValid = false;
+                    }
+                }
+            }
+        
+            if (bValid)
+            {
+                string messageText = "";
+                
+                <p>@thankYou</p>
+        
+                if (dt != null)
+                {
+                    foreach (PropertyType pt in dt.CompositionPropertyTypes)
+                    {
+                        messageText += pt.Alias + " " + Request.Form[pt.Alias] + "\r\n";
+                        
+                        <div class="@Grid.Row form-group" style="clear:both;">
+                            <label for="@pt.Alias" class="control-label @Grid.Cols(Grid.Md, 3)">@pt.Name :</label>
+                            <div class="@Grid.Cols(Grid.Md, 9)">
+                                @Request.Form[pt.Alias]
+                            </div>
+                        </div>
+                    }
+                }
+
+
+                var ct = contentService.CreateContent(doctype + " " + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), folderId, doctype, 0);
+
+                foreach (PropertyType pt in dt.CompositionPropertyTypes)
+                {
+
+                    ct.SetValue(pt.Alias, Request.Form[pt.Alias]);
+
+                }
+
+                contentService.Save(ct);
+
+                if(!string.IsNullOrEmpty(contactEmail))
+                { 
+                    string to = contactEmail;
+                    string subj = "Form submission : " + doctype + " : " + title;
+
+                    try
+                    {
+                        // Initialize WebMail helper
+                        WebMail.SmtpServer = "smtp.mandrillapp.com";
+                        WebMail.SmtpPort = 587;
+                        WebMail.UserName = "chris.isnt@gmail.com";
+                        WebMail.Password = "DvhMZNQH5CNrgEayGWxFdg";
+                        WebMail.From = contactEmail;
+
+                        // Send email
+                        WebMail.Send(to: to,
+                            cc: "chris@isnt.co.uk",
+                            subject: subj,
+                            body: messageText
+                        );
+                    }
+                    catch (Exception ex)
+                    {
+                        messageText = ex.Message;
+                    }
+                }
+                
+                return;
+            }
+        }
+    }
+        
+    
+}
+
+@Html.Partial("IntroHelper", Model,
+        viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h3" } })
+
+
+@if (dt != null)
+{
+
+    <form class="form-horizontal" id="@("frm" + DateTime.Now.Millisecond)" method="POST" >
+
+        <fieldset>
+
+            @Html.AntiForgeryToken()
+            @Html.Hidden("num1", num1)
+            @Html.Hidden("num2", num2)
+
+            @if (dt != null)
+            {
+
+                foreach (PropertyType pt in dt.CompositionPropertyTypes)
+                {
+
+                    <div class="@Grid.Row form-group" >
+
+                        @if (pt.PropertyEditorAlias == "Umbraco.TrueFalse")
+                        {
+                            <div class="@Grid.Off(Grid.Xs, 3) @Grid.Cols(Grid.Xs, 9)">
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="@pt.Alias"> @pt.Name</label>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <label for="@pt.Alias" class="control-label @Grid.Cols(Grid.Md, 3)">@pt.Name :</label>
+                            <div class="@Grid.Cols(Grid.Md, 6)">
+
+                                @if (pt.PropertyEditorAlias == "Umbraco.TextboxMultiple" || pt.PropertyEditorAlias == "Umbraco.TinyMCEv3")
+                                {
+                                    <textarea rows="4" class="form-control" id="@pt.Alias" name="@pt.Alias" placeholder="@pt.Name">@Request.Form[pt.Alias]</textarea>
+                                }
+                                else
+                                {
+                                    <input type="text" class="form-control" id="@pt.Alias" name="@pt.Alias" placeholder="@pt.Name" value="@Request.Form[pt.Alias]" />
+                                }
+                                <span class="help-block">@pt.Description</span> @*@pt.PropertyEditorAlias*@
+
+                            </div>
+
+                        }
+                    </div>
+
+
+                }
+
+
+            }
+
+            <div class="@Grid.Row form-group">
+                <label for="sum" class="control-label @Grid.Cols(Grid.Md, 3)">Sum :</label>
+                <div class="@Grid.Cols(Grid.Md, 6)">
+                    <input type=" text" class="form-control" id="sum" name="sum" width="2" maxlength="2" placeholder="@(num1 + " plus " + @num2 + " equals")" value=" @Request.Form["sum"] " />
+                    <span class="help-block">@Html.Encode("To help us avoid spam, please add " + num1 + " and " + num2)</span>
+                </div>
+            </div>
+
+            <div class="@Grid.Row form-group">
+                <div class="@Grid.Off(Grid.Xs, 3) @Grid.Cols(Grid.Xs, 9)">
+                    <span id=" errormessage" class="errorMessage">
+                    </span>
+                </div>
+            </div>
+
+
+            <div class="@Grid.Row form-group">
+                <div class="@Grid.Off(Grid.Xs, 3) @Grid.Cols(Grid.Xs, 9)">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+
+    <script>
+
+
+        $(document).ready(function () {
+
+            $.validator.addMethod(
+                    "regex",
+                    function (value, element, regexp) {
+                        var re = new RegExp(regexp, "gi");
+                        return this.optional(element) || re.test(value);
+                    },
+                    "Please check your input."
+            );
+
+
+            $("form").validate({
+                rules: {@{ bool bNotFirst = false; } @foreach (PropertyType pt in dt.CompositionPropertyTypes)
+                                                     {
+                                                         if (bNotFirst)
+                                                         { @(",");
+                                                         }
+                                                         if (pt.Mandatory || !string.IsNullOrEmpty(pt.ValidationRegExp))
+                                                         {
+                                                             bNotFirst = true;
+                            @(pt.Alias + ":{")
+                                                             if (pt.Mandatory)
+                                                             {@("required: true");
+                                                             }
+                                                             if (pt.Mandatory && !string.IsNullOrEmpty(pt.ValidationRegExp))
+                                                             {@(", ");
+                                                             }
+                                                             if (!string.IsNullOrEmpty(pt.ValidationRegExp))
+                                                             {@Html.Raw("regex: \"" + pt.ValidationRegExp + "\"");
+                                                             }
+                            @("}")
+                        }
+                    }
+                },
+                highlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                },
+                unhighlight: function (element) {
+                    $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

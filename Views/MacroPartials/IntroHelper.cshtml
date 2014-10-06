@@ -1,0 +1,44 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+@{
+    //var root = CurrentPage.AncestorOrSelf(1);
+
+    
+    IPublishedContent mdl =  (Model.GetType().ToString() == "Umbraco.Web.Models.RenderModel") ? Model.Content : Model;
+
+    int showTitleInt = Convert.ToInt32(ViewData["showTitle"]);
+    string headingTag = Convert.ToString(ViewData["headingTag"]);
+    if (string.IsNullOrEmpty(headingTag))
+        { headingTag = "h3"; }
+        
+    bool showTitle = (showTitleInt > 0);
+    
+    string title = (mdl.HasProperty("title") ? Convert.ToString(mdl.GetPropertyValue("title")) : "");
+    string introParagraph = (mdl.HasProperty("introParagraph") ? Convert.ToString(mdl.GetPropertyValue("introParagraph")) : "");
+    string bodyText = (mdl.HasProperty("bodyText") ? Convert.ToString(mdl.GetPropertyValue("bodyText")) : "");
+    
+    string dateStr = "";
+    if (mdl.HasProperty("date"))
+    {
+        DateTime dt = DateTime.Parse(mdl.GetPropertyValue("date").ToString());
+        if (dt > DateTime.MinValue) { dateStr = dt.ToString("dd MMM yyyy"); }
+    }
+      
+}
+
+
+@if (showTitle && !string.IsNullOrEmpty(title))
+{ 
+    @Html.Raw("<" + headingTag + " class=\"pageTitle\">")
+    @title
+    @Html.Raw("</" + headingTag + ">") 
+}
+
+@if (!string.IsNullOrEmpty(dateStr))
+{
+    <p class="date">@dateStr</p>
+}
+@if (!string.IsNullOrEmpty(introParagraph))
+{
+    <p class="intro">@introParagraph</p>
+}
+@Html.Raw(@bodyText)

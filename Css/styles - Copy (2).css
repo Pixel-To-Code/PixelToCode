@@ -1,0 +1,434 @@
+﻿
+@font-face {
+    font-family: 'ralewayregular';
+    src: url('/fonts/raleway-regular-webfont.eot');
+    src: url('/fonts/raleway-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/raleway-regular-webfont.woff') format('woff'),
+         url('/fonts/raleway-regular-webfont.ttf') format('truetype'),
+         url('/fonts/raleway-regular-webfont.svg#ralewayregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ralewaybold';
+    src: url('/fonts/raleway-bold-webfont.eot');
+    src: url('/fonts/raleway-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/raleway-bold-webfont.woff') format('woff'),
+         url('/fonts/raleway-bold-webfont.ttf') format('truetype'),
+         url('/fonts/raleway-bold-webfont.svg#ralewaybold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ralewaylight';
+    src: url('/fonts/raleway-light-webfont.eot');
+    src: url('/fonts/raleway-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/raleway-light-webfont.woff') format('woff'),
+         url('/fonts/raleway-light-webfont.ttf') format('truetype'),
+         url('/fonts/raleway-light-webfont.svg#ralewaylight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+body { font-family: 'ralewayregular'; }
+
+section { 
+    margin-top: 1em;
+    border-top: 2px solid #dd3b2a; 
+
+}
+
+.fullwidth {
+    width: 100%;
+}
+
+ul.nav li a,
+h1, h2, h3, h4, h5, h6 { font-family: 'ralewaybold'; }
+
+
+.pageTitle {
+    clear: both;
+}
+
+.social ul.social {
+    margin-top: -5px;
+}
+
+.social ul.social li {
+    float: right;
+    margin: 0 0 5px 10px;
+    display: table;
+    table-layout: fixed;
+}
+
+.footer ul.nav.social {
+    float:none;
+    margin: 0 auto;
+    display: table;
+    table-layout: fixed;
+
+}
+
+.elements {
+    display: block;
+    margin-bottom: 1em;
+}
+
+p.intro {
+    font-size: 1.4em;
+}
+
+.green { 
+    background-color: #ccc;     
+    padding: 5px;
+ }
+
+.pagination li { list-style: none; float: left; margin: 0px 3px; }
+
+    .pagination li h4 {
+        margin-top: 0px;
+    }
+
+.promoLinks {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+ul.promoLinks li { list-style: none; }
+
+.navbar {
+    border: none;
+}
+
+.navbar-default {
+    background-color: navy;
+}
+.navbar-default .navbar-nav > li a
+{
+        color: rgb(88, 140, 140);
+text-transform: uppercase;
+font-size: 17px;
+font-family: ralewayregular;
+
+}
+
+/*
+.footer {
+    position: absolute;
+    bottom: 0px;
+    width: 90%;
+    height: 60px;
+    background-color: #F5F5F5;
+}
+
+.container .text-muted {
+    margin: 20px 0px;
+}
+    */
+
+ul.level-2 {
+    padding-left: 4px;
+}
+
+ul.level-3 {
+    padding-left: 8px;
+}
+
+
+
+.topnav .logo img
+{
+    max-width: 100%;
+    height: auto;
+}
+
+.topnav .navbar
+{
+border-top: 4px solid #dd3b2a;
+margin-top: 20px;
+}
+
+.footer .navbar
+{
+    background-color: #fff;
+    padding: 0 1em;
+    margin-top: 0;
+    border-radius: 0 0 4px 4px;
+}
+
+
+
+.navbar-brand {
+	height: 76px;
+	position: relative;
+	line-height: 45px;
+    padding-left: 0;
+}
+
+.topnav
+{
+margin-top: 18px;
+margin-bottom: 60px;
+}
+
+
+
+
+ .navbar-default {
+	background-color: transparent;
+	border-color: #00374f;
+}
+.navbar-default .navbar-brand {
+	color: #edf6ff;
+}
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+	color: #dd3b2a;
+}
+.navbar-default .navbar-text {
+	color: #edf6ff;
+}
+.navbar-default .navbar-nav > li > a {
+	color: #00374f;
+          
+}
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+	color: #00374f;
+      
+
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+	color: #fff;
+	background-color: #00374f;
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+	color: #edf6ff;
+	background-color: #00374f;
+}
+.navbar-default .navbar-toggle {
+	border-color: #00374f;
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+	background-color: #edf6ff;
+}
+.navbar-default .navbar-toggle .icon-bar {
+	background-color: #00374f;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+	border-color: #edf6ff;
+}
+.navbar-default .navbar-link {
+	color: #edf6ff;
+}
+.navbar-default .navbar-link:hover {
+	color: #edf6ff;
+}
+
+.dropdown-menu {
+    border: none;
+    border-radius: none;
+    box-shadow: none;
+}
+
+.navbar-default .navbar-nav > li ul li a {
+    
+    color: #fff;
+    background-color: #2babe1;
+    
+}
+
+.navbar-default .navbar-nav > li ul li a:hover {
+    background-color: #00374f;
+}
+
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+    color: #FFF;
+    text-decoration: none;
+    background-color: #00374f;
+    outline: 0px none;
+}
+
+@media (max-width: 767px) {
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a {
+		color: #edf6ff;
+	}
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+		color: #edf6ff;
+	}
+	.navbar-default .navbar-nav .open .dropdown-menu > .active > a, .       -default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+		color: #edf6ff;
+		background-color: #00374f;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  height: 400px;
+  margin-bottom: 60px;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+    z-index: 10;
+    left: 20%;
+    top: 30%;
+    margin-bottom: 30px;
+    text-align: left;
+}
+.carousel-caption h2, .carousel-caption p {
+    width: inherit;
+    padding: 5px;
+    background-color: rgba(241, 241, 241, 0.5);
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  height: 400px;
+  background-color: #777;
+}
+.carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 400px;
+}
+
+.breadcrumb {
+    padding: 8px;
+    margin-bottom: 10px;
+    list-style: none outside none;
+    background-color: inherit;
+    border-radius: 0px;
+}
+
+#breadcrumb-full {
+    background-image: -webkit-gradient( linear, left top, left bottom, color-stop(0, #2babe1), color-stop(1, #3cbcf2) );
+    background-image: -o-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: -moz-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: -webkit-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: -ms-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: linear-gradient(to bottom, #2babe1 0%, #3cbcf2 100%);
+    
+    border-top: 6px solid #dd3b2a; 
+    border-bottom: 2px solid #00374f;
+    margin-bottom: 10px;
+}
+
+#content-full {
+    /*
+        background-image: -webkit-gradient( linear, left top, left bottom, color-stop(0, #2babe1), color-stop(1, #3cbcf2) );
+    background-image: -o-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: -moz-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: -webkit-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: -ms-linear-gradient(bottom, #2babe1 0%, #3cbcf2 100%);
+    background-image: linear-gradient(to bottom, #2babe1 0%, #3cbcf2 100%);
+        */
+}
+
+#footer-full {
+background-image: -webkit-gradient(
+	linear,
+	left top,
+	left bottom,
+	color-stop(0, #00374f),
+	color-stop(1, #11486a)
+);
+background-image: -o-linear-gradient(bottom, #00374f 0%, #11486a 100%);
+background-image: -moz-linear-gradient(bottom, #00374f 0%, #11486a 100%);
+background-image: -webkit-linear-gradient(bottom, #00374f 0%, #11486a 100%);
+background-image: -ms-linear-gradient(bottom, #00374f 0%, #11486a 100%);
+background-image: linear-gradient(to bottom, #00374f 0%, #11486a 100%);
+}
+
+
+.homepromos {
+    color: #003133;
+    border: none;
+}
+
+.homepromos ul  { list-style: none outside none;}
+.homepromos ul li a { color: #003133; }
+
+    .homepromos ul.panelcontrols {
+    padding: 30px 10px;
+    line-height: 2.5em;
+    background-color: #edf6ff;
+    border-radius: 300px 300px;
+    min-height: 300px;
+    text-align: center;
+    }
+    
+    .homepromos ul.panelcontrols li {
+    font-size: 20px;   
+}
+
+    .homepromos .spacer {
+        margin-top: 20px;
+    }
+
+    .homepromos .the-panels {
+        max-width: 608px;
+        height: 278px;
+        overflow: hidden;
+        padding-left: 20px;
+    }
+
+    .homepromos div.panel {
+                display: none;
+                height: 100%;
+    }
+
+    .homepromos div.panel p { width: 75%;}
+
+        .homepromos div.panel img { float: right;}
+
+    .homepromos div.panel0 {
+        display: block;
+    }
+
+.blockInner
+{
+    display: table;
+    width: 100%;
+}
+
+
+
+h1 {
+  margin: 0.67em 0;
+  /*font-family: 'Adelle W01 Bold', 'Arvo', Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif", "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;*/
+  font-size: 91px;
+  font-weight: 500;
+}
+h2 {
+  color: #dd3b2a;
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 400;
+}
+h3 {
+  color: #dd3b2a;
+  /*font-family: 'Adelle W01 Bold', 'Arvo', Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif", "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;*/
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.25em;
+  margin: 0.5em 0;
+}

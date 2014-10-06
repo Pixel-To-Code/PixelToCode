@@ -1,0 +1,97 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{    
+   IPublishedContent mdl = Model.Content;
+
+   int itemsPerPage = (mdl.GetPropertyValue("itemsPerPage") == null ? 0 : int.Parse(mdl.GetPropertyValue("itemsPerPage").ToString()));
+   int itemsPerRow = (mdl.GetPropertyValue("itemsPerRow") == null ? 0 : int.Parse(mdl.GetPropertyValue("itemsPerRow").ToString()));
+
+   bool sortReverseOrder = false;
+   bool ret = Boolean.TryParse(mdl.GetPropertyValue("sortReverseOrder").ToString(), out sortReverseOrder);
+       
+   int pageNo = Request.QueryString["p"] == null ? 0 : int.Parse(Request.QueryString["p"]);
+
+   ViewDataDictionary vData = ViewData;
+   
+   int itemsToShow = 0;
+   if (vData["itemsToShow"] != null) { itemsToShow = int.Parse(vData["itemsToShow"].ToString()); }
+}
+
+@Html.Partial("IntroHelper", Model,
+        viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h3" } })
+
+@{
+    IEnumerable<IPublishedContent> childNodes;
+    if (sortReverseOrder)
+    {
+        childNodes = mdl.Children.Where(x => x.IsVisible()).OrderByDescending(o => (o.HasProperty("date") ? o.GetPropertyValue("date") : o.CreateDate));
+    }
+    else
+    {
+        childNodes = mdl.Children.Where(x => x.IsVisible()).OrderBy(o => (o.HasProperty("date") ? o.GetPropertyValue("date") : o.CreateDate));
+    }
+            
+    if (childNodes.Any())
+    {
+        int totalItems = childNodes.Count();
+        int numPages = 0;
+
+        if (itemsPerPage == 0) { itemsPerPage = totalItems; }
+
+        numPages = (int)Math.Floor(Convert.ToDouble(totalItems) / Convert.ToDouble(itemsPerPage));
+        if (pageNo < 0) { pageNo = 0; }
+        if (pageNo > numPages - 1) { pageNo = numPages - 1; }
+
+        if (itemsToShow > 0)
+        {
+            childNodes = childNodes.Take(itemsToShow);
+        }
+        else
+        {
+            childNodes = childNodes.Skip(pageNo * itemsPerPage).Take(itemsPerPage);            
+        }
+                <div class="row" >
+            @foreach (var elem in childNodes)
+            {
+                // xs (phones), sm (tablets), md (desktops), and lg (larger desktops).
+
+                string cols = "@Grid.Cols(Grid.Xs, 12)";
+
+                //string title = elem.GetPropertyValue("title") == null ? elem.Name : elem.GetPropertyValue("title").ToString();
+                //string intro = elem.GetPropertyValue("introParagraph") == null ? "" : elem.GetPropertyValue("introParagraph").ToString();
+
+                <div class="@cols">
+
+                    @Html.Partial("IntroHelper", elem,
+                        viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h4" } })
+
+                    <a href="@elem.Url">Read more</a>
+
+                </div>
+
+            }
+            </div>
+    
+        if (totalItems > itemsPerPage)
+        {
+            
+            <div class="pagination">
+                <ul>
+                    <li><a href="@("?p=" + (pageNo -1).ToString())">
+                            <span class="label label-info">< Previous</span>
+                    </a></li>
+                    @for (int i = 0; i < numPages; i++)
+                    {
+                        <li><a href="@("?p=" + i.ToString())">
+                                <h4><span class="label @("label-" + (i == pageNo ? "primary" : "info"))">@((i + 1).ToString())</span></h4>
+                            </a></li>
+                    }
+                    <li><a href="@("?p=" + (pageNo +1).ToString())">
+                            <span class="label label-info">Next ></span>
+                        </a></li>
+                </ul>
+            </div>
+        }
+    
+    }
+    
+}

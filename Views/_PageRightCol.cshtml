@@ -1,0 +1,35 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using FlowJo
+@{
+    Layout = "Master.cshtml";
+    int cacheTime = 10;
+
+    string title = Umbraco.Field("title", altFieldAlias: "pageName").ToString();
+   
+}
+
+
+<div class="row">
+
+
+    <div class="@Grid.Cols(Grid.Md, 9)">
+        @Html.CachedPartial("IntroHelper", Model, cacheTime, cacheByPage: true,
+                              viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h1" } })
+
+        <div class="elements">
+            @Html.Partial("Elements", Model)
+        </div>
+        @RenderSection("macroContent", false)
+    </div>
+
+    <div id="rightCol" class="@Grid.Cols(Grid.Md, 3)">
+        <div id="rightColUpper">
+            @Html.CachedPartial("RightCol", Model, cacheTime, cacheByPage: true)
+        </div>
+        <div id="rightColLower">
+            @Html.CachedPartial("RightPromos", Model, cacheTime, cacheByPage: true)
+        </div>
+    </div>
+
+
+</div>

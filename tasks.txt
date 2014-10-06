@@ -1,0 +1,16 @@
+tasks - pxlcode / flowJo / JoeFlow / 
+
+
+xs / s / md / lg col values - archetype
+logo float left
+forms send email, black?? download to excel
+external redirects
+remove CurrentPage - use Model.GetPropertyValue
+Html.Partial - title / intro / bodyText - hide if blank
+Package up
+
+draw a line and build the sites...
+
+blogposts
+easy umbraco forms
+starting up pxlcode

@@ -1,0 +1,309 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using FlowJo
+@{
+    @* Get the root of the website *@
+    var root = CurrentPage.AncestorOrSelf(1);
+ 
+    var logo = string.IsNullOrEmpty(Convert.ToString(root.Logo)) ? null : Umbraco.Media(root.Logo);
+}
+
+
+
+
+
+<div id="header">
+
+    <div class="logo">
+        <a href="/" rel="home">
+            @if (logo != null)
+            {
+                <img src="@logo.Url" alt="Home" class="img-responsive" />
+            }
+            else
+            {
+                @: Home
+            }
+        </a>
+    </div>
+
+    <label for="main-nav-check" class="toggle" onclick="" title="Menu">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </label>
+
+</div>
+
+
+<div class="headerNav">
+    <ul>
+        @foreach (var id in root.HeaderMenuPageLinks.Split(','))
+        {
+            var content = Umbraco.Content(id);
+            <li><a href="@content.Url">@content.Name</a></li>
+        }
+    </ul>
+</div>
+
+
+
+<input type="checkbox" name="nav" id="main-nav-check" />
+    <div id="menu">
+        <label for="main-nav-check" class="toggle" onclick="" title="Close">&times;</label>
+        <ul>
+
+            @foreach (var page in root.Children.Where("NodeTypeAlias == \"Page\" && Visible"))
+            {
+                var childPages = page.Children.Where("NodeTypeAlias == \"Page\" && Visible");
+                bool bKids = childPages.Any();
+
+                @* 
+                class="@(childPages.Any() ? "dropdown" : "") @(page.IsAncestorOrSelf(CurrentPage) ? "active" : null)"
+                *@
+
+                <li>
+                    <a href="@page.Url" @(bKids ? "class=dropdown-toggle" : "") @(bKids ? "data-toggle=dropdown" : "")>
+                        @page.Name 
+                    </a>
+                    @if (bKids)
+                    {
+                        <label for="@("fof" + page.Id.ToString())" class="toggle-sub" onclick="">&#9658;</label>
+                        <input type="checkbox" name="nav" id="@("fof" + page.Id.ToString())" class="sub-nav-check" />
+                        <ul id="@("fof" + page.Id.ToString() + "sub")" class="sub-nav" role="menu">
+                            <li class="sub-heading">@page.Name
+                            <label for="@("fof" + page.Id.ToString() + "sub")" class="toggle" onclick="" title="Back">&#9668;</label>
+                            </li>
+                            @foreach (var childPage in childPages)
+                            {
+                                <li><a href="@childPage.Url">@childPage.Name</a> </li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+
+    @*
+
+
+
+    <li>
+              <a href="http://fofwebdesign.co.uk/">Focus on Function</a>
+              <label for="fof" class="toggle-sub" onclick="">&#9658;</label>
+              <input type="checkbox" name="nav" id="fof" class="sub-nav-check" />
+              <ul id="fof-sub" class="sub-nav">
+
+
+                  <li class="sub-heading">Focus on Function <label for="fof" class="toggle" onclick="" title="Back">&#9668;</label></li>
+                  <li><a href="#">About</a></li>
+                  <li><a href="#">Contact</a></li>
+                  <li><a href="#">FAQs</a></li>
+                  <li><a href="#">Help: Videos &amp; Guides</a></li>
+                  <li>
+                      <a href="#">Portfolio</a> <label for="fof-portfolio" class="toggle-sub" onclick="">&#9658;</label>
+                      <input type="checkbox" name="nav" id="fof-portfolio" class="sub-nav-check" />
+                      <ul id="fof-portfolio-sub" class="sub-nav">
+                          <li class="sub-heading">Portfolio <label for="fof-portfolio" class="toggle" onclick="" title="Back">&#9668;</label></li>
+                          <li>
+                              <a href="#">Graphics &amp; Artwork</a> <label for="fof-portfolio-graphics" class="toggle-sub" onclick="">&#9658;</label>
+                              <input type="checkbox" name="nav" id="fof-portfolio-graphics" class="sub-nav-check" />
+                              <ul id="fof-portfolio-graphics-sub" class="sub-nav">
+                                  <li class="sub-heading">Graphics &amp; Artwork <label for="fof-portfolio-graphics" class="toggle" onclick="" title="Back">&#9668;</label></li>
+                                  <li><a href="#">Artwork</a></li>
+                                  <li><a href="#">Graphics</a></li>
+                                  <li><a href="#">Logos</a></li>
+                                  <li><a href="#">Photography</a></li>
+                              </ul>
+                          </li>
+                          <li><a href="#">Script Development</a></li>
+                          <li><a href="#">Website Design</a></li>
+                      </ul>
+                  </li>
+                  <li>
+                      <a href="#">Services</a> <label for="fof-services" class="toggle-sub" onclick="">&#9658;</label>
+                      <input type="checkbox" name="nav" id="fof-services" class="sub-nav-check" />
+                      <ul id="fof-services-sub" class="sub-nav">
+                          <li class="sub-heading">Services <label for="fof-services" class="toggle" onclick="" title="Back">&#9668;</label></li>
+                          <li><a href="#">Content Management</a></li>
+                          <li><a href="#">Graphic Design</a></li>
+                          <li><a href="#">Script Development</a></li>
+                          <li>
+                              <a href="#">SEO</a> <label for="fof-services-seo" class="toggle-sub" onclick="">&#9658;</label>
+                              <input type="checkbox" name="nav" id="fof-services-seo" class="sub-nav-check" />
+                              <ul id="fof-services-seo-sub" class="sub-nav">
+                                  <li class="sub-heading">SEO <label for="fof-services-seo" class="toggle" onclick="" title="Back">&#9668;</label></li>
+                                  <li><a href="#">In-Page Optimisation</a></li>
+                                  <li><a href="#">Speed Optimisation</a></li>
+                              </ul>
+                          </li>
+                          <li><a href="#">Web Development</a></li>
+                      </ul>
+                  </li>
+              </ul>
+          </li>
+          <li><a href="http://fast-edit.co.uk/">Fast Edit (flat file CMS)</a></li>
+          <li>
+              <a href="http://fast-apps.co.uk/">Fast Apps</a> <label for="fast-apps" class="toggle-sub" onclick="">&#9658;</label>
+              <input type="checkbox" name="nav" id="fast-apps" class="sub-nav-check" />
+              <ul id="fast-apps-sub" class="sub-nav">
+                  <li class="sub-heading">Fast Apps <label for="fast-apps" class="toggle" onclick="" title="Back">&#9668;</label></li>
+                  <li><a href="#">Fast Logs</a></li>
+                  <li><a href="#">Fast Feed</a></li>
+                  <li><a href="#">Fast Warn</a></li>
+              </ul>
+          </li>
+          <li>
+              <a href="http://www.jemcon.org/">JemCon.org</a> <label for="jemcon" class="toggle-sub" onclick="">&#9658;</label>
+              <input type="checkbox" name="nav" id="jemcon" class="sub-nav-check" />
+              <ul id="jemcon-sub" class="sub-nav">
+                  <li class="sub-heading">JemCon.org <label for="jemcon" class="toggle" onclick="" title="Back">&#9668;</label></li>
+                  <li><a href="#">JemCon 2014</a></li>
+                  <li class="fly-left">
+                      <a href="#">Previous JemCons</a> <label for="jemcon-previous" class="toggle-sub" onclick="">&#9658;</label>
+                      <input type="checkbox" name="nav" id="jemcon-previous" class="sub-nav-check" />
+                      <ul id="jemcon-previous-sub" class="sub-nav">
+                          <li class="sub-heading">Previous JemCons <label for="jemcon-previous" class="toggle" onclick="" title="Back">&#9668;</label></li>
+                          <li><a href="#">JemCon 2013</a></li>
+                          <li><a href="#">JemCon 2012</a></li>
+                          <li><a href="#">JemCon 2011</a></li>
+                          <li><a href="#">JemCon 2010</a></li>
+                          <li><a href="#">JemCon 2009</a></li>
+                          <li><a href="#">JemCon 2008</a></li>
+                          <li><a href="#">JemCon 2007</a></li>
+                          <li><a href="#">JemCon 2006</a></li>
+                          <li><a href="#">JemCon 2005</a></li>
+                      </ul>
+                  </li>
+                  <li><a href="#">Messageboard</a></li>
+              </ul>
+          </li>
+          <li><a href="http://www.dynamicdrive.com/">Dynamic Drive</a></li>
+
+*@      
+
+
+            </ul>
+            <label class="toggle close-all" onclick="uncheckboxes('nav')">&times;</label>
+        </div><!-- closing "#menu" -->
+
+
+
+
+    @*
+            <div class="row">
+                <a href="/" rel="home">
+                @if (logo != null)
+                {
+                    <img src="@logo.Url" alt="Home" class="img-responsive" />
+                }
+                else {
+                    @: Home
+                    }
+                </a>
+                <button data-dropdown-target="#navigation" class="visible-xs">
+                <span class="visuallyhidden">Toggle Navigation</span></button>
+                <div id="navigation" class="collapse">
+                    <ul>
+                        @foreach (var page in root.Children.Where("NodeTypeAlias == \"Page\" && Visible"))
+                        {
+                            var childPages = page.Children.Where("NodeTypeAlias == \"Page\" && Visible");
+                            bool bKids = childPages.Any();
+
+                            <li class="@(childPages.Any() ? "dropdown" : "") @(page.IsAncestorOrSelf(CurrentPage) ? "active" : null)">
+                                <a href="@page.Url" @(bKids ? "class=dropdown-toggle" : "") @(bKids ? "data-toggle=dropdown" : "")>
+                                    @page.Name @if (bKids)
+                                    {<span class="caret"></span>}
+                                </a>
+                                @if (bKids)
+                                {
+                                    <ul class="dropdown-menu" role="menu">
+                                        @foreach (var childPage in childPages)
+                                        {
+                                            <li class="@(page.IsAncestorOrSelf(CurrentPage) ? "active" : null)"> <a href="@childPage.Url">@childPage.Name</a> </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    </ul>
+
+
+
+                </div>
+            </div>
+
+
+    <div class="topnav row clearfix">
+
+        <div class="logo @Grid.Cols(Grid.Xs, 5) @Grid.Cols(Grid.Sm, 4) @Grid.Cols(Grid.Md, 3)">
+            <a href="/" class="navbar-brand">
+                @if (logo != null)
+                {
+                    <img src="@logo.Url" alt="logo" class="img-responsive" />
+                }
+            </a>
+        </div>
+
+
+        <!-- Static navbar -->
+        <div class="navbar navbar-default @Grid.Cols(Grid.Xs, 7) @Grid.Cols(Grid.Sm, 8) @Grid.Cols(Grid.Md, 9)" role="navigation">
+                <div class="navbar-header responsive-logo">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-default responsive-nav">
+                        @foreach (var page in root.Children.Where("NodeTypeAlias == \"Page\" && Visible"))
+                        {
+                            var childPages = page.Children.Where("NodeTypeAlias == \"Page\" && Visible");
+                            bool bKids = childPages.Any();
+
+                            <li class="@(childPages.Any() ? "dropdown" : "") @(page.IsAncestorOrSelf(CurrentPage) ? "active" : null)">
+                                <a href="@page.Url" @(bKids ? "class=dropdown-toggle" : "") @(bKids ? "data-toggle=dropdown" : "")>
+                                    @page.Name @if (bKids)
+                                    {<span class="caret"></span>}
+                                </a>
+                                @if (bKids)
+                                {
+                                    <ul class="dropdown-menu" role="menu">
+                                        @foreach (var childPage in childPages)
+                                        {
+                                            <li class="@(page.IsAncestorOrSelf(CurrentPage) ? "active" : null)"> <a href="@childPage.Url">@childPage.Name</a> </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    </ul>
+
+
+
+
+
+                    <ul class="nav navbar-nav navbar-right">
+                        @foreach (var id in root.HeaderMenuPageLinks.Split(','))
+                        {
+                            var content = Umbraco.Content(id);
+                            <li><a href="@content.Url">@content.Name</a></li>
+                        }
+                    </ul>
+
+
+                    @ *<form class="navbar-form navbar-right" role="search">
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Search" type="text">
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </form>* @
+
+
+                </div><!--/.nav-collapse -->
+        </div>
+
+    </div>
+
+
+*@

@@ -1,0 +1,44 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using FlowJo
+@{
+    Layout = "Master.cshtml";
+    int cacheTime = 10;
+    
+    string title = Umbraco.Field("title").ToString();
+    
+    string dateStr = "";
+    if (Model.Content.HasProperty("date"))
+    {
+        DateTime dt = DateTime.Parse(Umbraco.Field("date").ToString());
+        if (dt > DateTime.MinValue) { dateStr = dt.ToString("dd MMM yyyy"); }
+    }
+}
+
+@if (!string.IsNullOrEmpty(title))
+{<h1 class="pageTitle">@title</h1>}
+
+<div class="row">
+    
+    <div id="leftCol" class="@Grid.Cols(Grid.Md, 3)">
+
+        <div id="leftColNav">
+            @Html.CachedPartial("LeftNav", Model, cacheTime, cacheByPage: true)
+        </div>
+        <div id="leftColLower">
+            @Html.CachedPartial("LeftCol", Model, cacheTime, cacheByPage: true)
+        </div>
+
+    </div>
+
+    <div class="@Grid.Cols(Grid.Md, 9)">
+        @Html.CachedPartial("IntroHelper", Model, cacheTime, cacheByPage: true,
+                              viewData: new ViewDataDictionary { { "showTitle", 0 }, { "headingTag", "h1" } })
+
+        <div class="elements">
+            @Html.Partial("Elements", Model)
+        </div>
+        @RenderSection("macroContent", false)
+    </div>
+
+
+</div>

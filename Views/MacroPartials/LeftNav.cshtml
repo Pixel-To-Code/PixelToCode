@@ -1,0 +1,58 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+var pages = CurrentPage.Parent.Children.Where("NodeTypeAlias == \"Page\" && Visible");
+}
+
+    @if (pages.Any())
+    {
+        var naviLevel = pages.First().Level;
+            
+     <nav>
+      <ul class="nav nav-pills nav-stacked span2 level-@naviLevel">
+
+            <li>
+                <a href="@CurrentPage.Parent.Url">@CurrentPage.Parent.Name</a>
+            </li>
+
+                @foreach (var childPage in pages)
+                {
+                    bool bActive = childPage.Id == CurrentPage.Id;
+                    <li>
+                    <a @(bActive ? "class=active" : "") href="@childPage.Url">@childPage.Name</a>
+
+                    @if (bActive)
+                    {
+                        var children = childPage.Children.Where("NodeTypeAlias == \"Page\" && Visible");
+                        
+                        if (children.Any())
+                        {
+                            @childPages(children)
+                        }
+                    }
+                </li>
+            }
+        </ul>
+         </nav>
+    }
+
+@helper childPages(dynamic pages)
+    {
+    if (pages.Any())
+    {
+        var naviLevel = pages.First().Level;
+
+        <ul class="nav nav-pills nav-stacked span2 level-@naviLevel">
+            @foreach (var page in pages.Where("Visible"))
+            {
+                <li>
+                    <a href="@page.Url">@page.Name</a>
+
+                    @if (page.Children.Where("Visible").Any())
+                    {
+                        @childPages(page.Children)
+                    }
+                </li>
+            }
+        </ul>
+    }
+}

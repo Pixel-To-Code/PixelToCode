@@ -1,0 +1,125 @@
+﻿/*==|Navigation|==============================================
+ *
+ *============================================================*/
+
+
+/* FOF */
+
+/* Released: 1st April 2014 - Beverley Hooton @ Focus on Function Web Design */
+/* Updated: 15th July 2014 - css to correct 'position:fixed' bug in Safari  */
+/*
+     html, body { margin:0; padding:0; height:100%; position:relative; background:#222; font:16px/1.75em Verdana, Arial, Helvetica, sans-serif }
+    */
+body { overflow-x:hidden; -webkit-animation:androidbugfix infinite 1s } /* http://timpietrusky.com/advanced-checkbox-hack */
+@-webkit-keyframes androidbugfix { from {padding:0} to {padding:0} } /* http://timpietrusky.com/advanced-checkbox-hack */
+
+#header { position: static; top:0; left:0; right:0; background:transparent; float: left; 
+          /* height:4.0625em; width: 100%;*/ 
+          min-height: 121px; }
+#header label { /*padding:0 0.125em;*/ font:2.875em/1.4375em Arial }
+#menu label { padding:0 0.25em; font:3.125em/1.375em Arial }
+#menu .sub-nav .toggle { padding:0 0.3125em; font:2em/2em Arial; top:0 }
+#header label:hover, #menu label:hover { color:#ccc }
+#main-nav-check, #menu .sub-nav-check { position:absolute; top:-9999px; left:-9999px }
+.toggle { position:absolute; right:0.15em; cursor:pointer; color:#fff; background-color: #222; }
+#menu, #menu .sub-nav { 
+    top:0; bottom:0; width:13.75em;
+    background:#222; z-index:9999; left:-13.75em;
+
+    position:absolute; 
+    
+  
+	-webkit-transform:translate(0,0); -ms-transform:translate(0,0); transform:translate(0,0);
+	-webkit-transition:-webkit-transform .25s ease; transition:transform .25s ease;
+	}
+#menu ul { background:#222; line-height:2.75em; text-decoration:none; padding:0; list-style:none; margin-top:4.0625em; border-top:1px solid #444 }
+#menu li { border-bottom:1px solid #444 }
+#menu li a { display:block; padding-left:1.5em; color:#fff; text-decoration:none }
+#menu li a:hover, #menu .toggle-sub:hover { background:#333 }
+#menu .sub-nav { margin-top:-1px }
+#menu .sub-heading { margin-top:4.0625em; padding-left:1.3125em; color:#999 }
+#menu .sub-heading:before { content:""; display:block; height:1px; width:13.75em; margin-left:-1.3125em; background:#444 }
+#menu .toggle-sub { font:bold 1em/2.75em Arial; color:#fff; background:#222; float:right; margin-top:-2.75em; width:2.25em; border-left:1px solid #444; cursor:pointer; text-align:center }
+#menu, #menu .sub-nav { -webkit-transform:translate3d(0,0,0) } /* http://davidwalsh.name/translate3d */
+
+/* #### - corrects 'unfixing' bug in Safari - uncomment if you have position:fixed elements inside .container - #### */
+/* @media screen and (-webkit-min-device-pixel-ratio:0) { .container { -webkit-transform:none } } */
+
+/* #### - extra css for js enhancement - #### */
+#menu .close-all { display:none }
+.js #menu .close-all { display:inline }
+.js #menu .toggle { top:0; z-index:9999 }
+.js #menu .sub-nav .toggle { left:0.15em; width:1em }
+
+/* #### - define ids of animated container, menu and sub-menus here - #### */
+#main-nav-check:checked ~ #menu,
+#menu .sub-nav-check:checked ~ #fof1081sub,
+#menu .sub-nav-check:checked ~ #fof-sub, 
+#menu .sub-nav-check:checked ~ #fof-portfolio-sub, 
+#menu .sub-nav-check:checked ~ #fof-portfolio-graphics-sub,
+#menu .sub-nav-check:checked ~ #fof-services-sub, 
+#menu .sub-nav-check:checked ~ #fof-services-seo-sub,
+#menu .sub-nav-check:checked ~ #fast-apps-sub,
+#menu .sub-nav-check:checked ~ #jemcon-sub,
+#menu .sub-nav-check:checked ~ #jemcon-previous-sub { 
+	-webkit-transform:translate(13.75em,0); -ms-transform:translate(13.75em,0); transform:translate(13.75em,0) 
+	}
+
+
+@media ( min-width:60em ) { /* #### - switch to desktop menu at 960px (960/16=60 - 16px being default browser font-size) - #### */
+
+	/* #### - extra css for js enhancement - #### */
+	.js #menu .close-all { display:none }
+
+    #menu, #menu .sub-nav { -webkit-transform:translate(0,0) !important; -ms-transform:translate(0,0) !important; transform:translate(0,0) !important }
+	#menu label, #menu .sub-nav, #menu .sub-heading, #header label { display:none }
+	#menu { left:auto; bottom:auto; height:0; width:100%;
+
+               
+
+    position:relative; 
+    
+
+	}
+	#menu > ul { float:right; position:relative; z-index:1; top:0.4285em; 
+                 /* right:1em; */
+                  margin-top:0; display:inline-table; border-left:1px solid #444; border-right:0; font-size:0.875em }
+	#menu ul:after { content:""; clear:both; display:block }
+	#menu ul li { float:left; position:relative; text-align:left; border-right:1px solid #444 }
+	#menu ul li a { padding:0.5em 2.5em 0.5em 1.5em }
+	#menu ul li a:only-child { padding-right:1.5em }
+	#menu ul li a:after { content:"\203A"; position:absolute; right:0.5em; margin-top:-1.5625em; display:block; font:1.5em Arial; -webkit-transform:rotate(90deg); -ms-transform:rotate(90deg); transform:rotate(90deg) }
+	#menu ul li a:only-child:after { content:"" }
+	#menu ul li:hover > a { background:#333; -webkit-transition:background-color .25s ease; transition:background-color .25s ease }
+	#menu ul li:hover > ul { display:block }
+	#menu ul ul { position:absolute; left:0; margin-left:-1px }
+	#menu ul ul li { float:none; width:13.75em; border-left:1px solid #444 }
+	#menu ul ul li a { padding:0 1.5em }
+	#menu ul ul li a:after { right:0.375em; margin-top:-1.6875em; -webkit-transform:none; -ms-transform:none; transform:none }
+	#menu ul .sub-nav { top:auto; bottom:auto; left:auto; width:auto; margin-top:0 }	
+	#menu ul ul .sub-nav { float:left; top:0; left:13.75em; margin-left:0; margin-top:-1px }
+	#menu ul .fly-left ul { left:-13.75em; margin-left:-2px }
+	#menu ul .fly-left a:after { right:auto; left:0.5em; left:0.375em; margin-top:-1.5625em; -webkit-transform:rotate(-180deg); -ms-transform:rotate(-180deg); transform:rotate(-180deg) }
+
+} 
+
+/*  ADDED  */
+
+
+.headerNav
+{
+    float: right;
+    margin: 8px 0 0 20px;
+}
+
+.headerNav ul li
+{
+    float: left;
+    list-style: none outside none;
+}
+
+.headerNav ul li a
+{
+    padding: 5px;
+}
+

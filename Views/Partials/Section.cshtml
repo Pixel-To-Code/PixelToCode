@@ -1,0 +1,11 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    Umbraco.Web.Models.PartialViewMacroModel mdl = new global::Umbraco.Web.Models.PartialViewMacroModel(Model.Content, 0, "", "", null);
+}
+
+<section>
+    @Html.Partial("IntroHelper", Model,
+                        viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h3" } })
+
+    @Html.Partial("Elements", mdl)
+</section>

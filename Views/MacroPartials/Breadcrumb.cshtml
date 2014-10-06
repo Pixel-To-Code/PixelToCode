@@ -1,0 +1,79 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using FlowJo
+@{
+    var root = CurrentPage.AncestorOrSelf(1);
+
+    string twitterLink = "";
+    string facebookLink = "";
+    string linkedInLink = "";
+    string youtubeLink = "";
+
+    if (root != null)
+    {
+        twitterLink = root.TwitterLink == null ? "" : root.TwitterLink;
+        facebookLink = root.FacebookLink == null ? "" : root.FacebookLink;
+        linkedInLink = root.LinkedInLink == null ? "" : root.LinkedInLink;
+        youtubeLink = root.YoutubeChannelLink == null ? "" : root.YoutubeChannelLink;
+    }
+}
+
+@*
+    This snippet makes a breadcrumb of parents using an unordred html list.
+
+    How it works:
+    - It uses the Ancestors() method to get all parents and then generates links so the visitor get go back
+    - Finally it outputs the name of the current page (without a link)
+*@
+
+<div class="row">
+    <div class="@Grid.Cols(Grid.Md, 9)">
+        @if (CurrentPage.Ancestors().Any())
+        {
+            <nav class="clearfix" style="clear: both;">
+                <ul class="breadcrumb">
+                    <li><a href="/">@CurrentPage.AncestorOrSelf(1).GetPropertyValue("title")</a></li>
+                    @* For each page in the ancestors collection which have been ordered by Level (so we start with the highest top node first) *@
+                    @foreach (var page in CurrentPage.Ancestors("Page").OrderBy("Level"))
+                    {
+                        <li><a href="@page.Url">@page.Name</a></li>
+                    }
+                    @* Display the current page as the last item in the list *@
+                    <li class="active">@CurrentPage.Name</li>
+                </ul>
+            </nav>
+        }
+        else
+        {
+            <h4 class="strapline">@CurrentPage.Strapline</h4>
+        }
+    </div>
+
+    <div class="@Grid.Cols(Grid.Md, 3)">
+
+        <div class="socialNav">
+
+            @if (!string.IsNullOrEmpty(twitterLink) || !string.IsNullOrEmpty(facebookLink) || !string.IsNullOrEmpty(linkedInLink) || !string.IsNullOrEmpty(youtubeLink))
+            {
+                <ul class="nav social">
+                    @if (!string.IsNullOrEmpty(twitterLink))
+                    {
+                        <li><a href="http://twitter.com/@twitterLink" title="twitter @twitterLink" target="_blank"><img src="/images/social/twitter/32.png" alt="twitter @twitterLink" class="img-responsive" /></a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(facebookLink))
+                    {
+                        <li><a href="http://facebook.com/@facebookLink" title="facebook @facebookLink" target="_blank"><img src="/images/social/facebook/32.png" alt="facebook @facebookLink" class="img-responsive" /></a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(linkedInLink))
+                    {
+                        <li><a href="https://www.linkedin.com/profile/view?id=@linkedInLink" title="linkedIn @linkedInLink" target="_blank"><img src="/images/social/linkedin/32.png" alt="linkedIn @linkedInLink" class="img-responsive" /></a></li>
+                    }
+                    @if (!string.IsNullOrEmpty(youtubeLink))
+                    {
+                        <li><a href="http://youtube.com/user/@youtubeLink" title="youtube @youtubeLink" target="_blank"><img src="/images/social/youtube/32.png" alt="youtube @youtubeLink" class="img-responsive" /></a></li>
+                    }
+                </ul>
+            }
+
+        </div>
+    </div>
+    </div>

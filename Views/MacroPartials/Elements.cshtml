@@ -1,0 +1,59 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+@using FlowJo
+@{
+    // loop through node children recursively and render according to type alias
+    
+    IPublishedContent mdl = Model.Content;
+      
+    string[] dontProcess = new string[] { "Page", "Folder" };
+
+    IEnumerable<IPublishedContent> childNodes = mdl.Children.Where(x => !dontProcess.Contains(x.DocumentTypeAlias) && x.IsVisible());
+
+    if (childNodes.Any())
+    {
+        <div class="row" >
+            @foreach (var elem in childNodes)
+            {                                
+                // xs (phones), sm (tablets), md (desktops), and lg (larger desktops).
+                
+                string cols = Grid.Cols(Grid.Md, 12);
+                
+                //string clas = "";
+
+                IPublishedContent theNode = elem;
+
+                if (elem.HasProperty("columnsLargeScreen"))
+                {
+                    cols = Grid.Cols(Grid.Md, (int)elem.GetPropertyValue("columnsLargeScreen"));
+                }
+                
+                if (elem.HasProperty("selectedContent"))
+                {
+                    int cont = 0;
+                    cont = int.Parse(elem.GetPropertyValue("selectedContent").ToString());
+                    theNode = Umbraco.Content(cont);
+                }
+
+                //if (theNode.HasProperty("style"))
+                //{
+                //    clas = theNode.GetPropertyValue("style").ToString();
+                //}
+
+                ViewDataDictionary vdata = new ViewDataDictionary();
+                if (elem.HasProperty("itemsToShow"))
+                {
+                    vdata.Add("itemsToShow", elem.GetPropertyValue("itemsToShow").ToString());
+                }
+                
+                
+                <div class="@cols @theNode.DocumentTypeAlias.ToLower() @("i" + theNode.Id)">
+
+                @{ Html.RenderPartial(theNode.DocumentTypeAlias, theNode, vdata ); }
+                
+
+                </div>
+            }
+        </div>
+    }
+
+}
