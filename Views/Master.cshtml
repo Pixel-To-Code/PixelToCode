@@ -1,8 +1,18 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
-@using FlowJo
+@using Simplismo
 @{
     Layout = null;
     int cachedSeconds = 10;
+
+    @* redirect if property value set *@
+    var umbracoRedirect = Model.Content.HasProperty("umbracoRedirect") ? Model.Content.GetPropertyValue("umbracoRedirect").ToString() : "";
+    if (!string.IsNullOrEmpty(umbracoRedirect))
+    {
+        Response.RedirectPermanent(umbracoRedirect);
+    }
+
+    var bodyClass = Model.Content.Name;
+
 }
 
 <!DOCTYPE html>
@@ -12,13 +22,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="icon" href="/favicon.ico">
+    <link rel="SHORTCUT ICON" href="/favicon.ico" />
 
     @Html.CachedPartial("Header", Model, cachedSeconds, cacheByPage: true)
 
-    <!-- Bootstrap core CSS 
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-        -->
 
     <link href="/css/responsive.min.css" rel="stylesheet" />
     <link href="~/Css/navigation.css" rel="stylesheet" />

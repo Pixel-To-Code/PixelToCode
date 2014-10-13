@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace FlowJo
+﻿namespace Simplismo
 {
     public static class Grid
     {
@@ -92,6 +87,18 @@ namespace FlowJo
         {
             return offset + "-" + deviceWidth + "-" + cols.ToString();
         }
-        
+
+        public static int ColsPerItem(int itemsPerRow)
+        {
+            if (itemsPerRow> 0 && itemsPerRow <= 12)
+            {
+                return ((int)(12 / itemsPerRow));
+            }
+            else
+            {
+                return 12;
+            }
+        }
+
     }
 }

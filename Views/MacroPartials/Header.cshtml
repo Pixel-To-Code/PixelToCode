@@ -1,5 +1,8 @@
 @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using System.Text
 @{
+    int cachedDays = 3 * 60 * 60 * 24;
+
     IPublishedContent root = CurrentPage.AncestorOrSelf(1);
 
     var siteName = root.GetPropertyValue("siteName");
@@ -8,9 +11,10 @@
     if (string.IsNullOrEmpty(introParagraph))
     {
         introParagraph = (root.GetPropertyValue("introParagraph") + " " + title).Trim();
-    }    
+    }
 }
-<meta name="keywords" content="@siteName @title" />
+
+@Html.CachedPartial("MetaKeywords", Model, cachedDays, cacheByPage: true)
 <meta name="description" content="@introParagraph" />
 <meta name="author" content="Pixel-to-Code by ISNT Limited @DateTime.Today.Year" />
-<title>@siteName | @title</title>
+<title>@title | @siteName</title>

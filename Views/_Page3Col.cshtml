@@ -1,5 +1,5 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
-@using FlowJo
+@using Simplismo
 @{
     Layout = "Master.cshtml";
     int cacheTime = 10;
@@ -28,7 +28,9 @@
     <div class="@Grid.Cols(Grid.Md, 6)">
 
         @Html.CachedPartial("IntroHelper", Model, cacheTime, cacheByPage: true,
-                              viewData: new ViewDataDictionary { { "showTitle", 0 }, { "headingTag", "h1" } })
+                              viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h1" } })
+
+        @Html.Raw(Model.Content.GetPropertyValue("bodyText"))
 
         <div class="elements">
             @Html.Partial("Elements", Model)

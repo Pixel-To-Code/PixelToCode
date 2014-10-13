@@ -1,8 +1,7 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+@using Simplismo
 @{
     //var root = CurrentPage.AncestorOrSelf(1);
-
-    
     IPublishedContent mdl =  (Model.GetType().ToString() == "Umbraco.Web.Models.RenderModel") ? Model.Content : Model;
 
     int showTitleInt = Convert.ToInt32(ViewData["showTitle"]);
@@ -14,7 +13,7 @@
     
     string title = (mdl.HasProperty("title") ? Convert.ToString(mdl.GetPropertyValue("title")) : "");
     string introParagraph = (mdl.HasProperty("introParagraph") ? Convert.ToString(mdl.GetPropertyValue("introParagraph")) : "");
-    string bodyText = (mdl.HasProperty("bodyText") ? Convert.ToString(mdl.GetPropertyValue("bodyText")) : "");
+    //string bodyText = (mdl.HasProperty("bodyText") ? Convert.ToString(mdl.GetPropertyValue("bodyText")) : "");
     
     string dateStr = "";
     if (mdl.HasProperty("date"))
@@ -22,14 +21,24 @@
         DateTime dt = DateTime.Parse(mdl.GetPropertyValue("date").ToString());
         if (dt > DateTime.MinValue) { dateStr = dt.ToString("dd MMM yyyy"); }
     }
-      
+
+
+
+    //var imageUrl = mdl.HasProperty("image") ? Help.GetImageUrl(mdl, "268", "201") : null;
+
 }
 
+
+@*@if (imageUrl != null)
+{ 
+    <img src="@imageUrl" alt="@title" class="img-responsive right" />
+
+}*@
 
 @if (showTitle && !string.IsNullOrEmpty(title))
 { 
     @Html.Raw("<" + headingTag + " class=\"pageTitle\">")
-    @title
+    @Html.Raw(title)
     @Html.Raw("</" + headingTag + ">") 
 }
 
@@ -39,6 +48,7 @@
 }
 @if (!string.IsNullOrEmpty(introParagraph))
 {
-    <p class="intro">@introParagraph</p>
+    <p class="intro">@Html.Raw(introParagraph)</p>
 }
-@Html.Raw(@bodyText)
+
+@*@Html.Raw(@bodyText)*@

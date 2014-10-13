@@ -1,5 +1,5 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
-@using FlowJo
+@using Simplismo
 @{
     Layout = "Master.cshtml";
     int cacheTime = 10;
@@ -12,9 +12,11 @@
 <div class="row">
 
 
-    <div class="@Grid.Cols(Grid.Md, 9)">
+    <div class="@Grid.Cols(Grid.Md, 8)">
         @Html.CachedPartial("IntroHelper", Model, cacheTime, cacheByPage: true,
                               viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h1" } })
+
+        @Html.Raw(Model.Content.GetPropertyValue("bodyText"))
 
         <div class="elements">
             @Html.Partial("Elements", Model)
@@ -22,7 +24,7 @@
         @RenderSection("macroContent", false)
     </div>
 
-    <div id="rightCol" class="@Grid.Cols(Grid.Md, 3)">
+    <div id="rightCol" class="@Grid.Cols(Grid.Md, 3) @Grid.Off(Grid.Md, 1)">
         <div id="rightColUpper">
             @Html.CachedPartial("RightCol", Model, cacheTime, cacheByPage: true)
         </div>

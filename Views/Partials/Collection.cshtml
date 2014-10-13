@@ -1,43 +1,60 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using Simplismo
+@using Umbraco.Web.Models
 @{    
    IPublishedContent mdl = Model.Content;
 
    int itemsPerPage = (mdl.GetPropertyValue("itemsPerPage") == null ? 0 : int.Parse(mdl.GetPropertyValue("itemsPerPage").ToString()));
    int itemsPerRow = (mdl.GetPropertyValue("itemsPerRow") == null ? 0 : int.Parse(mdl.GetPropertyValue("itemsPerRow").ToString()));
+   var bodytext = (mdl.GetPropertyValue("bodytext") == null ? "" : mdl.GetPropertyValue("bodytext").ToString());
 
    bool sortReverseOrder = false;
    bool ret = Boolean.TryParse(mdl.GetPropertyValue("sortReverseOrder").ToString(), out sortReverseOrder);
-       
+
    int pageNo = Request.QueryString["p"] == null ? 0 : int.Parse(Request.QueryString["p"]);
 
    ViewDataDictionary vData = ViewData;
    
    int itemsToShow = 0;
    if (vData["itemsToShow"] != null) { itemsToShow = int.Parse(vData["itemsToShow"].ToString()); }
+
+   bool useItemTemplates = false;
+   if (mdl.HasProperty("useItemTemplates"))
+   {
+       ret = Boolean.TryParse(mdl.GetPropertyValue("useItemTemplates").ToString(), out useItemTemplates);
+   }
+
 }
 
 @Html.Partial("IntroHelper", Model,
         viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h3" } })
 
+@Html.Raw(bodytext)
+
+
 @{
     IEnumerable<IPublishedContent> childNodes;
     if (sortReverseOrder)
     {
-        childNodes = mdl.Children.Where(x => x.IsVisible()).OrderByDescending(o => (o.HasProperty("date") ? o.GetPropertyValue("date") : o.CreateDate));
+        childNodes = mdl.Children.Where(x => x.IsVisible()).OrderByDescending(o => (o.HasProperty("date") ? o.GetPropertyValue("date") : o.Index()));
     }
     else
     {
-        childNodes = mdl.Children.Where(x => x.IsVisible()).OrderBy(o => (o.HasProperty("date") ? o.GetPropertyValue("date") : o.CreateDate));
+        childNodes = mdl.Children.Where(x => x.IsVisible()).OrderBy(o => (o.HasProperty("date") ? o.GetPropertyValue("date") : o.Index()));
     }
-            
-    if (childNodes.Any())
+
+
+    if (childNodes != null && childNodes.Any())
     {
+        int iCount = 0;
+        
         int totalItems = childNodes.Count();
-        int numPages = 0;
+        int numPages = 1;
 
         if (itemsPerPage == 0) { itemsPerPage = totalItems; }
 
-        numPages = (int)Math.Floor(Convert.ToDouble(totalItems) / Convert.ToDouble(itemsPerPage));
+        numPages = (int)Math.Ceiling(Convert.ToDouble(totalItems) / Convert.ToDouble(itemsPerPage));
+    
         if (pageNo < 0) { pageNo = 0; }
         if (pageNo > numPages - 1) { pageNo = numPages - 1; }
 
@@ -49,25 +66,119 @@
         {
             childNodes = childNodes.Skip(pageNo * itemsPerPage).Take(itemsPerPage);            
         }
-                <div class="row" >
-            @foreach (var elem in childNodes)
+        
+        <div class="row">
+        @foreach (IPublishedContent elem in childNodes)
+        {
+            if (useItemTemplates && elem.TemplateId > 0)
             {
+                @Umbraco.RenderTemplate(elem.Id, elem.TemplateId)
+            }
+            else
+            {                       
+                
                 // xs (phones), sm (tablets), md (desktops), and lg (larger desktops).
 
-                string cols = "@Grid.Cols(Grid.Xs, 12)";
+                ViewDataDictionary vdata = new ViewDataDictionary();
 
-                //string title = elem.GetPropertyValue("title") == null ? elem.Name : elem.GetPropertyValue("title").ToString();
+                string cols = Grid.Cols(Grid.Xs, Grid.ColsPerItem(itemsPerRow));
+
+                string title = elem.GetPropertyValue("title") == null ? elem.Name : elem.GetPropertyValue("title").ToString();
                 //string intro = elem.GetPropertyValue("introParagraph") == null ? "" : elem.GetPropertyValue("introParagraph").ToString();
+                string bodyText = (elem.HasProperty("bodyText") ? Convert.ToString(elem.GetPropertyValue("bodyText")) : "");
 
-                <div class="@cols">
+                //var imageThumbUrl = "";
+                //dynamic imageThumbSrc = elem.GetPropertyValue("image"); // == null ? "" : elem.GetPropertyValue("image");
+                //if (imageThumbSrc != null)
+                //{
+
+                //    var imageThumb = Umbraco.TypedMedia(Convert.ToInt32(elem.GetPropertyValue("image")));
+
+                //    var w = Convert.ToInt32(imageThumb.GetPropertyValue("umbracoWidth"));
+                //    var h = Convert.ToInt32(imageThumb.GetPropertyValue("umbracoHeight"));
+            
+                //    // works
+                //    //imageThumbUrl = imageThumb.GetCropUrl("image", "Thumbnail");
+
+                //    imageThumbUrl = imageThumb.GetCropUrl(width:@w, height:@h, ratioMode:ImageCropRatioMode.Height);
+
+                //}
+
+                var imageThumbUrl = Help.GetImageUrl(elem, "300", "200");
+   
+                if (iCount > 0 && itemsPerRow > 0 && iCount % itemsPerRow == 0)
+                {
+                    @Html.Raw("</div><div class=\"row\">")                    
+                }
+                
+                iCount++;
+
+                <div class="tile clearfix @cols @elem.DocumentTypeAlias.ToLower()">
+
+                    @if (!string.IsNullOrEmpty(imageThumbUrl))
+                    {
+                        @Html.Raw("<div class=\"" + Grid.Cols(Grid.Md,4) + "\">")
+                        
+                        <img src="@imageThumbUrl" alt="@title" class="img-responsive thumbnail"/>
+                        
+                        @Html.Raw("</div>")
+                        
+                        @Html.Raw("<div class=\"" + Grid.Cols(Grid.Md,8) + "\">")
+                    }
 
                     @Html.Partial("IntroHelper", elem,
-                        viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h4" } })
+                        viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h3" } })
+                        
+                    @if (!string.IsNullOrEmpty(bodyText) || elem.Children().Count() > 0)
+                    { 
+                        <div class='readmore'>
+                            <a href="@elem.Url" >Read more</a>
+                            </div>
+                    }
+                   
+                    @* show video tour link button for a project *@
 
-                    <a href="@elem.Url">Read more</a>
+                    @if (elem.DocumentTypeAlias.ToLower() == "project")
+                    {
+                        var flashtour = elem.Descendants("FlashTour").FirstOrDefault();
+                        if (flashtour != null)
+                        { 
+                            <div class='readmore'>
+                                <a href="@flashtour.Url" data-modal-title="Video Tour">View video tour</a>
+                            </div>
+                        }
+
+                        var video = elem.Descendants("VimeoYoutube").FirstOrDefault();
+                        if (video != null)
+                        {
+                            var videoUrl = video.HasProperty("url") ? video.GetPropertyValue("url").ToString() : "";
+                            if (!string.IsNullOrEmpty(videoUrl))
+                            { 
+                                <div class="readmore">
+                                    <a href="@videoUrl" data-modal-title="">
+                                        View the video
+                                    </a>
+                                </div>
+                            }
+                        }
+                    }
+                    
+                    @* show ipix link button for an ipix item *@
+
+                    @if (elem.DocumentTypeAlias.ToLower() == "ipix")
+                    {
+                            <div class='readmore'>
+                                <a href="@elem.Url" data-modal-title="Panoramic Tour">View</a>
+                            </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(imageThumbUrl))
+                    {
+                        @Html.Raw("</div>")
+                    }                                    
 
                 </div>
-
+                }
             }
             </div>
     
@@ -75,7 +186,7 @@
         {
             
             <div class="pagination">
-                <ul>
+                @*<ul>
                     <li><a href="@("?p=" + (pageNo -1).ToString())">
                             <span class="label label-info">< Previous</span>
                     </a></li>
@@ -88,10 +199,41 @@
                     <li><a href="@("?p=" + (pageNo +1).ToString())">
                             <span class="label label-info">Next ></span>
                         </a></li>
-                </ul>
+                </ul>*@
+           
+                <div class="btn-group">
+                    @if (pageNo > 0)
+                    {
+                        <a href="@("?p=" + (pageNo -1).ToString())">
+                            <button>
+                                <span class="label label-info">< Previous</span>
+                            </button>
+                        </a>
+                    }
+                    
+                    @for (int i = 0; i < numPages; i++)
+                    {
+                        <a href="@("?p=" + i.ToString())" class="@(i == pageNo ? "active" : "")">
+                            <button>
+                                <span class="label @("label-" + (i == pageNo ? "primary" : "info"))">@((i + 1).ToString())</span>
+                            </button>
+                        </a>
+                    }
+                    
+                    @if (pageNo < numPages - 1)
+                    {
+                        <a href="@("?p=" + (pageNo +1).ToString())">
+                            <button>
+                                <span class="label label-info">Next ></span>
+                            </button>
+                        </a>
+                    }
+                    </div>
             </div>
         }
     
     }
-    
 }
+
+    
+

@@ -1,0 +1,164 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using Simplismo
+@using Umbraco.Web.Models
+@{    
+   IPublishedContent mdl = Model.Content;
+
+   int itemsPerPage = (mdl.GetPropertyValue("itemsPerPage") == null ? 0 : int.Parse(mdl.GetPropertyValue("itemsPerPage").ToString()));
+   int itemsPerRow = (mdl.GetPropertyValue("itemsPerRow") == null ? 0 : int.Parse(mdl.GetPropertyValue("itemsPerRow").ToString()));
+
+   bool sortReverseOrder = false;
+   bool ret = Boolean.TryParse(mdl.GetPropertyValue("sortReverseOrder").ToString(), out sortReverseOrder);
+
+   int pageNo = Request.QueryString["p"] == null ? 0 : int.Parse(Request.QueryString["p"]);
+
+   ViewDataDictionary vData = ViewData;
+   
+   int itemsToShow = 0;
+   if (vData["itemsToShow"] != null) { itemsToShow = int.Parse(vData["itemsToShow"].ToString()); }
+}
+
+@Html.Partial("IntroHelper", Model,
+        viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h3" } })
+
+@{
+    IEnumerable<IPublishedContent> childNodes;
+    if (sortReverseOrder)
+    {
+        childNodes = mdl.Children.Where(x => x.IsVisible()).OrderByDescending(o => (o.HasProperty("date") ? o.GetPropertyValue("date") : o.CreateDate));
+    }
+    else
+    {
+        childNodes = mdl.Children.Where(x => x.IsVisible()).OrderBy(o => (o.HasProperty("date") ? o.GetPropertyValue("date") : o.CreateDate));
+    }
+
+    if (childNodes.Any())
+    {
+        int totalItems = childNodes.Count();
+        int numPages = 0;
+
+        if (itemsPerPage == 0) { itemsPerPage = totalItems; }
+
+        numPages = (int)Math.Floor(Convert.ToDouble(totalItems) / Convert.ToDouble(itemsPerPage));
+        if (pageNo < 0) { pageNo = 0; }
+        if (pageNo > numPages - 1) { pageNo = numPages - 1; }
+
+        if (itemsToShow > 0)
+        {
+            childNodes = childNodes.Take(itemsToShow);
+        }
+        else
+        {
+            childNodes = childNodes.Skip(pageNo * itemsPerPage).Take(itemsPerPage);
+        }
+
+        <div class="row">
+            @foreach (IPublishedContent elem in childNodes)
+            {
+                // xs (phones), sm (tablets), md (desktops), and lg (larger desktops).
+
+                ViewDataDictionary vdata = new ViewDataDictionary();
+
+                string cols = Grid.Cols(Grid.Xs, Grid.ColsPerItem(itemsPerRow));
+
+                string title = elem.GetPropertyValue("title") == null ? elem.Name : elem.GetPropertyValue("title").ToString();
+                //string intro = elem.GetPropertyValue("introParagraph") == null ? "" : elem.GetPropertyValue("introParagraph").ToString();
+                string bodyText = (elem.HasProperty("bodyText") ? Convert.ToString(elem.GetPropertyValue("bodyText")) : "");
+
+                var imageThumbUrl = Help.GetImageUrl(elem, "300", "200");
+
+                if (elem.Index() % itemsPerRow == 0)
+                {
+                    @Html.Raw("</div><div class=\"row\">")
+
+                }
+
+                    <div class="tile @cols">
+                    
+                        <div class="row">
+                            <div id="@("t" + elem.Id)" class=" clearfix ">
+
+                                <div class="polaroid @Grid.Cols(Grid.Md, 6)">
+                                    <a href="@elem.Url">
+                                        
+                                        @if (!string.IsNullOrEmpty(imageThumbUrl))
+                                        {
+                                            <img src="@imageThumbUrl" alt="@title" class="img-responsive thumbnail" />
+                                        }
+                                    </a>
+                                </div>
+
+                                <div class="biog @Grid.Cols(Grid.Md, 6)">
+
+                                    @Html.Partial("IntroHelper", elem,
+                                    viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h3" } })
+
+                                    @Html.Raw(bodyText)
+
+                                    @*@if (!string.IsNullOrEmpty(bodyText))
+                                    {
+                                        <div class='readmore'>
+                                            <a href="@elem.Url">Read more</a>
+                                        </div>
+                                    }*@
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+            }
+        </div>
+
+        if (totalItems > itemsPerPage)
+        {
+
+            <div class="pagination">
+                <ul>
+                    <li><a href="@("?p=" + (pageNo -1).ToString())">
+                            <span class="label label-info">< Previous</span>
+                    </a></li>
+                    @for (int i = 0; i < numPages; i++)
+                    {
+                        <li><a href="@("?p=" + i.ToString())">
+                                <h4><span class="label @("label-" + (i == pageNo ? "primary" : "info"))">@((i + 1).ToString())</span></h4>
+                            </a></li>
+                    }
+                    <li><a href="@("?p=" + (pageNo +1).ToString())">
+                            <span class="label label-info">Next ></span>
+                        </a></li>
+                </ul>
+            </div>
+        }
+
+    }
+}
+
+@*
+    <script type="text/javascript">
+        $(".tileback").hide();
+        //$(".tileface").show();
+
+        $(".tile").hover(function () {
+            //$(".tileface", this).slide();
+            //$(".tileback", this).slide();
+
+            var id = $(this).attr('id');
+            var speed = 300;
+
+            //alert(id);
+
+            $('.tile:not(#' + id + ') .tileface').fadeTo(300, 1);
+
+            $('.tile#' + id + ' .tileface').fadeTo(speed, 0.1);
+
+            $('.tile:not(#' + id + ') .tileback').fadeTo(speed, 0.1);
+
+            $('.tile#' + id + ' .tileback').fadeTo(speed, 1);
+
+            //$('#tiles div.' + color + ' img').fadeTo("slow", 1);
+        });
+
+    </script>
+*@

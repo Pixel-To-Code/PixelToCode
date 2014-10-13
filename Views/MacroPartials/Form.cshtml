@@ -1,6 +1,6 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @using System.Text.RegularExpressions
-@using FlowJo
+@using Simplismo
 @{
     Layout = null;
     Random r = new Random(DateTime.Now.Millisecond);
@@ -34,10 +34,8 @@
         {
         }
         else
-        {
-            num1 = int.Parse(Request.Form["num1"]);
-            num2 = int.Parse(Request.Form["num2"]);
-        
+        {   
+            // check anti-forgery token         
             try { 
                 AntiForgery.Validate(Request.Cookies["__RequestVerificationToken"].Value, Request.Form["__RequestVerificationToken"].ToString());
             }
@@ -46,12 +44,14 @@
                 bValid = false;
             }
 
-
+            // validate sum
+            num1 = int.Parse(Request.Form["num1"]);
+            num2 = int.Parse(Request.Form["num2"]);
             if (Request["sum"] == null || int.Parse(Request["sum"].ToString()) != (num1 + num2))
             { bValid = false; 
             <p>Sum : invalid answer</p>}
         
-            // sever-side validation
+            // server-side validation
             foreach (PropertyType pt in dt.CompositionPropertyTypes)
             {
                 if (pt.Mandatory && string.IsNullOrEmpty(Request.Form[pt.Alias]))
@@ -71,12 +71,16 @@
                 }
             }
         
+            // if all ok, show thank you message
+            
             if (bValid)
             {
                 string messageText = "";
                 
                 <p>@thankYou</p>
         
+                // show the information entered 
+                
                 if (dt != null)
                 {
                     foreach (PropertyType pt in dt.CompositionPropertyTypes)
@@ -92,14 +96,13 @@
                     }
                 }
 
-
+                // save the information as 
+                
                 var ct = contentService.CreateContent(doctype + " " + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"), folderId, doctype, 0);
 
                 foreach (PropertyType pt in dt.CompositionPropertyTypes)
                 {
-
                     ct.SetValue(pt.Alias, Request.Form[pt.Alias]);
-
                 }
 
                 contentService.Save(ct);
@@ -145,6 +148,8 @@
 
 @if (dt != null)
 {
+    
+    // BUILD THE FORM
 
     <form class="form-horizontal" id="@("frm" + DateTime.Now.Millisecond)" method="POST" >
 
@@ -189,24 +194,20 @@
 
                         }
                     </div>
-
-
                 }
-
-
             }
 
             <div class="@Grid.Row form-group">
                 <label for="sum" class="control-label @Grid.Cols(Grid.Md, 3)">Sum :</label>
                 <div class="@Grid.Cols(Grid.Md, 6)">
-                    <input type=" text" class="form-control" id="sum" name="sum" width="2" maxlength="2" placeholder="@(num1 + " plus " + @num2 + " equals")" value=" @Request.Form["sum"] " />
-                    <span class="help-block">@Html.Encode("To help us avoid spam, please add " + num1 + " and " + num2)</span>
+                    <span class="help-block">@Html.Encode("To help us avoid spam, please add " + num1 + " and " + num2 + " and enter the answer in the box")</span>
+                    <input type="text" class="form-control" id="sum" name="sum" maxlength="2" placeholder="@(num1 + " plus " + @num2 + " equals")" value=" @Request.Form["sum"] " />
                 </div>
             </div>
 
             <div class="@Grid.Row form-group">
                 <div class="@Grid.Off(Grid.Xs, 3) @Grid.Cols(Grid.Xs, 9)">
-                    <span id=" errormessage" class="errorMessage">
+                    <span id="errormessage" class="errorMessage">
                     </span>
                 </div>
             </div>

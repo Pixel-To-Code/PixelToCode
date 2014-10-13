@@ -1,6 +1,12 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    string bodyText = (Model.Content.HasProperty("bodyText") ? Convert.ToString(Model.Content.GetPropertyValue("bodyText")) : "");
+}
 
 @Html.Partial("IntroHelper", Model,
                         viewData: new ViewDataDictionary { { "showTitle", 1 }, { "headingTag", "h3" } })
 
-<a href="@Model.Content.Url">Read more</a>
+@if (!string.IsNullOrEmpty(bodyText))
+{
+    @Html.Raw(bodyText)
+}

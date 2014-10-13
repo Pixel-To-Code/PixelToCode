@@ -1,11 +1,11 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
-@using FlowJo
+@using Simplismo
 @{
     // loop through node children recursively and render according to type alias
     
     IPublishedContent mdl = Model.Content;
       
-    string[] dontProcess = new string[] { "Page", "Folder" };
+    string[] dontProcess = new string[] { "Page", "Folder", "Collection", "FlashTour" };
 
     IEnumerable<IPublishedContent> childNodes = mdl.Children.Where(x => !dontProcess.Contains(x.DocumentTypeAlias) && x.IsVisible());
 
@@ -22,11 +22,15 @@
 
                 IPublishedContent theNode = elem;
 
+                
+                // number of columns 
                 if (elem.HasProperty("columnsLargeScreen"))
                 {
                     cols = Grid.Cols(Grid.Md, (int)elem.GetPropertyValue("columnsLargeScreen"));
                 }
                 
+                
+                // select content from elsewhere
                 if (elem.HasProperty("selectedContent"))
                 {
                     int cont = 0;
@@ -34,11 +38,24 @@
                     theNode = Umbraco.Content(cont);
                 }
 
+                bool useCollectionTemplate = false;
+                if (elem.HasProperty("useCollectionTemplate"))
+                {
+                    bool ret = Boolean.TryParse(elem.GetPropertyValue("useCollectionTemplate").ToString(), out useCollectionTemplate);
+                }
+
+                //bool useItemTemplates = false;
+                //if (elem.HasProperty("useItemTemplates"))
+                //{
+                //    bool ret = Boolean.TryParse(elem.GetPropertyValue("useItemTemplates").ToString(), out useItemTemplates);
+                //}
+                
                 //if (theNode.HasProperty("style"))
                 //{
                 //    clas = theNode.GetPropertyValue("style").ToString();
                 //}
 
+                // pass in number of items to show (Latest news etc)
                 ViewDataDictionary vdata = new ViewDataDictionary();
                 if (elem.HasProperty("itemsToShow"))
                 {
@@ -48,7 +65,15 @@
                 
                 <div class="@cols @theNode.DocumentTypeAlias.ToLower() @("i" + theNode.Id)">
 
-                @{ Html.RenderPartial(theNode.DocumentTypeAlias, theNode, vdata ); }
+                 
+                    @if (useCollectionTemplate && theNode.TemplateId > 0)
+                    { 
+                        @Umbraco.RenderTemplate(theNode.Id, theNode.TemplateId)
+                    }
+                    else
+                    {
+                        Html.RenderPartial(theNode.DocumentTypeAlias, theNode, vdata); 
+                    }
                 
 
                 </div>

@@ -1,5 +1,5 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
-@using FlowJo
+@using Simplismo
 @{
     var root = CurrentPage.AncestorOrSelf(1);
 
@@ -26,7 +26,7 @@
 *@
 
 <div class="row">
-    <div class="@Grid.Cols(Grid.Md, 9)">
+    <div class="@Grid.Cols(Grid.Md, 12)">
         @if (CurrentPage.Ancestors().Any())
         {
             <nav class="clearfix" style="clear: both;">
@@ -44,36 +44,8 @@
         }
         else
         {
-            <h4 class="strapline">@CurrentPage.Strapline</h4>
+            <p class="strapline">@CurrentPage.Strapline</p>
         }
-    </div>
+</div>
 
-    <div class="@Grid.Cols(Grid.Md, 3)">
-
-        <div class="socialNav">
-
-            @if (!string.IsNullOrEmpty(twitterLink) || !string.IsNullOrEmpty(facebookLink) || !string.IsNullOrEmpty(linkedInLink) || !string.IsNullOrEmpty(youtubeLink))
-            {
-                <ul class="nav social">
-                    @if (!string.IsNullOrEmpty(twitterLink))
-                    {
-                        <li><a href="http://twitter.com/@twitterLink" title="twitter @twitterLink" target="_blank"><img src="/images/social/twitter/32.png" alt="twitter @twitterLink" class="img-responsive" /></a></li>
-                    }
-                    @if (!string.IsNullOrEmpty(facebookLink))
-                    {
-                        <li><a href="http://facebook.com/@facebookLink" title="facebook @facebookLink" target="_blank"><img src="/images/social/facebook/32.png" alt="facebook @facebookLink" class="img-responsive" /></a></li>
-                    }
-                    @if (!string.IsNullOrEmpty(linkedInLink))
-                    {
-                        <li><a href="https://www.linkedin.com/profile/view?id=@linkedInLink" title="linkedIn @linkedInLink" target="_blank"><img src="/images/social/linkedin/32.png" alt="linkedIn @linkedInLink" class="img-responsive" /></a></li>
-                    }
-                    @if (!string.IsNullOrEmpty(youtubeLink))
-                    {
-                        <li><a href="http://youtube.com/user/@youtubeLink" title="youtube @youtubeLink" target="_blank"><img src="/images/social/youtube/32.png" alt="youtube @youtubeLink" class="img-responsive" /></a></li>
-                    }
-                </ul>
-            }
-
-        </div>
-    </div>
     </div>

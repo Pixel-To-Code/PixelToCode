@@ -1,54 +1,63 @@
 @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using Simplismo;
 @{
     var promos = CurrentPage.GetPropertyValue("rightColumnPromos", true);
 }
 
 @foreach (var id in promos.Split(','))
 {
-    var content = Umbraco.Content(id);
-    
-    var title = content.Title;
-    var intro = content.IntroParagraph;
-    var text = content.BodyText;
-    var imageUrl = "";
-    string imageId = content.Image == null ? "" : content.Image.ToString();
-    if (!string.IsNullOrEmpty(imageId))
-    {
-        imageUrl = Umbraco.Media(imageId).GetCropUrl("image", "thumbnail");
-    }  
-    <div class="promo">
-        <h3>@title</h3>
+    IPublishedContent content = Umbraco.TypedContent(id);
 
-        @if (!string.IsNullOrEmpty(imageUrl))
-        {
-            <img src="@imageUrl" alt="@title" class="img-responsive" />
-        }
-        
-        <p class="intro">@intro</p>
-        @Html.Raw(@text)
-
-        @{
-    if (content.Links.GetType() != typeof(Umbraco.Core.Dynamics.DynamicNull))
+    if (content != null)
     {
-        Newtonsoft.Json.Linq.JArray links = content.Links;
-        if (links.Any())
-        {
-            <ul class="promoLinks">
-                @foreach (dynamic link in links)
+        var title = content.HasProperty("title") ? content.GetPropertyValue("title") : "";
+        var intro = content.HasProperty("introParagraph") ? content.GetPropertyValue("introParagraph") : "";
+        var text = content.HasProperty("bodyText") ? content.GetPropertyValue("bodyText") : "";
+
+        //var imageUrl = "";
+        //string imageId = content.Image == null ? "" : content.Image.ToString();
+        //if (!string.IsNullOrEmpty(imageId))
+        //{
+        //    imageUrl = Umbraco.Media(imageId).GetCropUrl("image", "thumbnail");
+        //}
+
+        var imageUrl = Help.GetImageUrl(content, "268", "201");
+
+        <div class="promo clearfix">
+            <h3>@title</h3>
+
+            @if (!string.IsNullOrEmpty(imageUrl))
+            {
+                <img src="@imageUrl" alt="@title" class="img-responsive" />
+            }
+
+            <p class="intro">@intro</p>
+            @Html.Raw(@text)
+
+            @{
+            //if (!string.IsNullOrEmpty(content.Links) && content.Links.GetType() != typeof(Umbraco.Core.Dynamics.DynamicNull))
+            //{
+            if (content.GetPropertyValue("links").GetType() == typeof(Newtonsoft.Json.Linq.JArray))
+            {
+                Newtonsoft.Json.Linq.JArray links = (Newtonsoft.Json.Linq.JArray)content.GetPropertyValue("links");
+                if (links.Any())
                 {
-                    var url = link.link;
-                    if (link.isInternal == true)
-                    {
-                        var thisId = link.@internal.ToString();
-                        url = Umbraco.NiceUrl(int.Parse(thisId));
-                    }
-                    <li><a href="@url" class="@(link.isInternal == true ? "internal" : "")" @(link.newWindow == true ? "target=_blank" : "")>@link.caption</a></li>
+                    <ul class="promoLinks">
+                        @foreach (dynamic link in links)
+                        {
+                            var url = link.link;
+                            if (link.isInternal == true)
+                            {
+                                var thisId = link.@internal.ToString();
+                                url = Umbraco.NiceUrl(int.Parse(thisId));
+                            }
+                            <li><div class="readmore"><a href="@url" class="@(link.isInternal == true ? "internal" : "")" @(link.newWindow == true ? "target=_blank" : "")>@link.caption</a></div></li>
+                        }
+                    </ul>
                 }
-            </ul>
-        }
-    }
-}
+            }
+            }
 
-    </div>
-        
+        </div>
+    }
 }
